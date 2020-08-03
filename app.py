@@ -33,7 +33,7 @@ def eval():
     math.parse()
 
 # get button background image
-button_bg = PhotoImage(file = r"src/btn_bg.png")
+button_bg = PhotoImage(file = r"res/btn_bg.png")
 
 buttons = [i for i in range(10)]
 row_fix = 2

@@ -7,17 +7,22 @@ class MagicMath(object):
         self.end = end
 
     def validate(self):
-        input = self.e.get()
+        input = self.e.get().replace("÷", "/")
 
         # TODO include validation for parenthesis
         pattern = re.compile(r'[0-9]+([\+\-\*\/\^][0-9]+)*')
         matches = pattern.finditer(input)
         
         try:
+            if(input.count("(") != input.count(")")):
+                ParenthesisError
+
             match = next(matches).group()
-            return match == input
+            return match == input or len(input) == 0
+        except ParenthesisError:
+            return "Malformed Expression"
         except StopIteration:
-            return False
+            return "Invalid Input"
 
     def solve(self, o, x, y):
         if(o == "^"):
@@ -39,9 +44,7 @@ class MagicMath(object):
             # or raise an exception
             return "Invalid Operator"
 
-    def assessPrecedence(self):
-        operators = self.operators
-        
+    def assessPrecedence(self, operators):
         highest = 0
         for op in operators:
             if highest == 0 and (op == "+" or op == "-"):
@@ -50,38 +53,56 @@ class MagicMath(object):
                 highest = 2
             elif highest <= 2 and (op == "^"):
                 highest = 3
-            elif highest <= 3 and (op == "(" or op == ")"):
-                highest = 4
+            # elif highest <= 3 and (op == "(" or op == ")"):
+            #     highest = 4
 
         self.highest = highest
 
-    def evaluate(self):
-        while len(self.terms) > 1:
-            # get the operator with highest precedence
+    def evaluate(self, input):
+        # evaluate parentheses
+        paren_count = input.count('(')
+
+        if(paren_count > 0):
+            # get parenthesis clause
+            pass
+
+        # set the terms
+        terms = re.split(r'[\/\*\-\+\^]', input)
+
+        # filter out empty strings from list
+        operators = re.split(r'\d+', input)
+        # set the operators
+        operators = list(filter(None, operators))
+
+        # set the operator's highest precedence in the equation
+        self.assessPrecedence(operators)
+
+        while len(terms) > 1:
+            # evaluate terms with highest operator precedence
             i = 0
-            while i < len(self.operators):
-                op = self.operators[i]
+            while i < len(operators):
+                op = operators[i]
 
                 if(self.precedence[op] == self.highest):
 
                     # simplify terms
-                    res = self.solve(op, float(self.terms[i]), float(self.terms[i+1]))
+                    res = self.solve(op, float(terms[i]), float(terms[i+1]))
 
                     # pop simplified terms and operator in the list
-                    self.terms[i] = res
-                    self.terms.pop(i+1)
+                    terms[i] = res
+                    terms.pop(i+1)
 
-                    self.operators.pop(i)
+                    operators.pop(i)
 
                     # reassess precedence
-                    self.assessPrecedence()
+                    self.assessPrecedence(operators)
 
                     # break the loop to restart
                     break
 
                 i += 1
 
-        result = self.terms[0]
+        result = terms[0]
         return result
 
     def display(self):
@@ -93,14 +114,9 @@ class MagicMath(object):
         self.e.insert(0, str(self.answer))
 
     def parse(self):
-        is_valid = self.validate()
+        error = self.validate()
 
-        if is_valid:
-            input = self.e.get()
-
-            # parse parentheses
-            paren_count = input.count('(')
-
+        if error == "":
             # initialize precedence for EMDAS
             self.precedence = {
                 "^": 3,
@@ -110,22 +126,12 @@ class MagicMath(object):
                 "-": 1
             }
 
-            # set the terms
-            self.terms = re.split(r'[\/\*\-\+\^]', input)
-
-            # filter out empty strings from list
-            operators = re.split(r'\d+', input)
-            # set the operators
-            self.operators = list(filter(None, operators))
-
-            # set the operator's highest precedence in the equation
-            self.assessPrecedence()
-
-            self.answer = self.evaluate()
+            input = self.e.get().replace("÷", "/")
+            self.answer = self.evaluate(input)
             
             # display answer
             self.display()
 
         else:
             self.e.delete(0, self.end)
-            self.e.insert(0, "Invalid Input")
+            self.e.insert(0, error)
