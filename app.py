@@ -2,18 +2,19 @@ from tkinter import *
 from tkinter import ttk as ttk
 from MagicMath import MagicMath
 
-# default button padding
-BPAD = (15, 15)
-
 root = Tk()
 root.title("MagiCAL")
+root["bg"] = "#ECECEC"
 
 style = ttk.Style()
 style.configure("Fixed.TButton", font="TkFixedFont")
 
+# style input
+ttk.Style().configure('pad.TEntry', padding='7 7 7 7')
+
 # create input
-input = Entry(root)
-input.grid(row=0, column=0, columnspan=4)
+input = ttk.Entry(root, style='pad.TEntry')
+input.grid(row=0, column=0, columnspan=4, padx=(5,0), pady=(5,0))
 
 math = MagicMath(input, END)
 
@@ -31,11 +32,22 @@ def clear():
 def eval():
     math.parse()
 
+# get button background image
+button_bg = PhotoImage(file = r"src/btn_bg.png")
+
 buttons = [i for i in range(10)]
 row_fix = 2
 for i in buttons:
     # lambda i=i to create different functions
-    buttons[i] = Button(root, padx=BPAD[0], pady=BPAD[1], text=i, command=lambda i=i: encode(i))
+    buttons[i] = Button(root,
+        bd=0, bg="#ECECEC",
+        borderwidth=0,
+        highlightthickness=0,
+        compound=CENTER,
+        padx=0, pady=0,
+        text=i,
+        image=button_bg,
+        command=lambda i=i: encode(i))
 
     if(i == 0):
         row = 4
@@ -45,18 +57,77 @@ for i in buttons:
         row = int((i-1)/3+1) 
         col = (i-1)%3
 
-    buttons[i].grid(row=row, column=col)
+    buttons[i].grid(row=row, column=col, padx=(5,0), pady=(5,0))
 
 # create dot button
-button_dot = Button(root, padx=BPAD[0], pady=BPAD[1], text=".").grid(row=4, column=1)
+button_dot = Button(root,
+        bd=0, bg="#ECECEC",
+        borderwidth=0,
+        highlightthickness=0,
+        compound=CENTER,
+        padx=0, pady=0,
+        text=".",
+        image=button_bg,
+        command=lambda: encode(".")).grid(row=4, column=1, padx=(5,0), pady=(5,0))
 
 # create operation buttons
-button_add = Button(root, padx=BPAD[0], pady=BPAD[1], text="+", command=lambda: encode("+")).grid(row=4, column=3)
-button_sub = Button(root, padx=BPAD[0], pady=BPAD[1], text="-", command=lambda: encode("-")).grid(row=3, column=3)
-button_mul = Button(root, padx=BPAD[0], pady=BPAD[1], text="*", command=lambda: encode("*")).grid(row=2, column=3)
-button_div = Button(root, padx=BPAD[0], pady=BPAD[1], text="/", command=lambda: encode("/")).grid(row=1, column=3)
-button_equal = Button(root, padx=BPAD[0], pady=BPAD[1], text="=", command=eval).grid(row=4, column=2)
+button_add = Button(root, 
+        bd=0, bg="#ECECEC",
+        borderwidth=0,
+        highlightthickness=0,
+        compound=CENTER,
+        padx=0, pady=0,
+        text="+",
+        image=button_bg,
+        command=lambda: encode("+")).grid(row=4, column=3, padx=(5,0), pady=(5,0))
 
-button_clear = Button(root, padx=BPAD[0], pady=BPAD[1], text="CLEAR", command=clear).grid(row=5, column=0, columnspan=4)
+button_sub = Button(root,
+        bd=0, bg="#ECECEC",
+        borderwidth=0,
+        highlightthickness=0,
+        compound=CENTER,
+        padx=0, pady=0,
+        text="-",
+        image=button_bg,
+        command=lambda: encode("-")).grid(row=3, column=3, padx=(5,0), pady=(5,0))
+
+button_mul = Button(root,
+        bd=0, bg="#ECECEC",
+        borderwidth=0,
+        highlightthickness=0,
+        compound=CENTER,
+        padx=0, pady=0,
+        text="*",
+        image=button_bg,
+        command=lambda: encode("*")).grid(row=2, column=3, padx=(5,0), pady=(5,0))
+
+button_div = Button(root,
+        bd=0, bg="#ECECEC",
+        borderwidth=0,
+        highlightthickness=0,
+        compound=CENTER,
+        padx=0, pady=0,
+        text="÷",
+        image=button_bg,
+        command=lambda: encode("÷")).grid(row=1, column=3, padx=(5,0), pady=(5,0))
+
+button_equal = Button(root,
+        bd=0, bg="#ECECEC",
+        borderwidth=0,
+        highlightthickness=0,
+        compound=CENTER,
+        padx=0, pady=0,
+        text="=",
+        image=button_bg,command=eval).grid(row=4, column=2, padx=(5,0), pady=(5,0))
+
+button_clear = Button(root,
+        bd=0, bg="#ECECEC",
+        borderwidth=0,
+        highlightthickness=0,
+        compound=CENTER,
+        padx=0, pady=0,
+        text="C",
+        image=button_bg,
+        command=clear).grid(row=5, column=0, columnspan=4, padx=(5,0), pady=(5,0))
 
 root.mainloop()

@@ -39,7 +39,7 @@ class MagicMath(object):
             # or raise an exception
             return "Invalid Operator"
 
-    def assessProcedence(self):
+    def assessPrecedence(self):
         operators = self.operators
         
         highest = 0
@@ -57,12 +57,12 @@ class MagicMath(object):
 
     def evaluate(self):
         while len(self.terms) > 1:
-            # get the operator with highest procedence
+            # get the operator with highest precedence
             i = 0
             while i < len(self.operators):
                 op = self.operators[i]
 
-                if(self.procedence[op] == self.highest):
+                if(self.precedence[op] == self.highest):
 
                     # simplify terms
                     res = self.solve(op, float(self.terms[i]), float(self.terms[i+1]))
@@ -73,8 +73,8 @@ class MagicMath(object):
 
                     self.operators.pop(i)
 
-                    # reassess procedence
-                    self.assessProcedence()
+                    # reassess precedence
+                    self.assessPrecedence()
 
                     # break the loop to restart
                     break
@@ -93,17 +93,22 @@ class MagicMath(object):
         self.e.insert(0, str(self.answer))
 
     def parse(self):
-        if self.validate():
-            # initialize procedence
-            self.procedence = {
+        is_valid = self.validate()
+
+        if is_valid:
+            input = self.e.get()
+
+            # parse parentheses
+            paren_count = input.count('(')
+
+            # initialize precedence for EMDAS
+            self.precedence = {
                 "^": 3,
                 "/": 2,
                 "*": 2,
                 "+": 1,
                 "-": 1
             }
-
-            input = self.e.get()
 
             # set the terms
             self.terms = re.split(r'[\/\*\-\+\^]', input)
@@ -113,8 +118,8 @@ class MagicMath(object):
             # set the operators
             self.operators = list(filter(None, operators))
 
-            # set the operator's highest procedence in the equation
-            self.assessProcedence()
+            # set the operator's highest precedence in the equation
+            self.assessPrecedence()
 
             self.answer = self.evaluate()
             
