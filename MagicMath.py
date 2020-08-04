@@ -9,11 +9,12 @@ class MagicMath(object):
         self.end = end
 
     def validate(self):
-        input = self.e.get().replace("÷", "/")
+        input = self.e.get().replace("÷", "/").replace("×", "*")
 
         # pattern = re.compile(r'^\(*[0-9]+[\(\)]*([\+\-\*\/\^]?[\(\)]*[0-9]+[\(\)]*)*$')
+        return ""
 
-        pattern = re.compile(r'^\(*(\d+(?:\.\d+)?)[\(\)]*([\+\-\*\/\^]?[\(\)]*(\d+(?:\.\d+)?)[\(\)]*)*$')
+        pattern = re.compile(r'^\(*(\d+(?:\.\d+)?)\%?[\(\)]*([\+\-\*\/\^]?[\(\)]*(\d+(?:\.\d+)?)\%?[\(\)]*)*$')
         matches = pattern.finditer(input)
         
         try:
@@ -30,6 +31,18 @@ class MagicMath(object):
             return "Malformed Expression"
         except StopIteration:
             return "Invalid Input"
+
+    def getPercent(self, term):
+        term = str(term)
+        result = 0
+
+        if term[-1] == "%":
+            result = term[0:-1]
+            result = float(result) / 100
+        else:
+            result = float(term)
+
+        return result
 
     def solve(self, o, x, y):
         if(o == "^"):
@@ -110,14 +123,19 @@ class MagicMath(object):
                 char_l = "*"
                 paren_converted = True
 
-            if end+1 < len(input) and input[end+1].isnumeric():
-                if not(paren_converted):
-                    char_r = "*"
-                else:
-                    raise ParenthesisError
+            percent_adjust = 0
+            if end+1 < len(input):
+                if input[end+1].isnumeric():
+                    if not(paren_converted):
+                        char_r = "*"
+                    else:
+                        raise ParenthesisError
+                elif input[end+1] == "%":
+                    ans = self.getPercent(f"{ans}%")
+                    percent_adjust = 1
 
             # restructure input
-            input = input[0:start-1] + char_l + str(ans) + char_r + input[end+1:]
+            input = input[0:start-1] + char_l + str(ans) + char_r + input[end+1+percent_adjust:]
 
             paren_count -= 1
 
@@ -140,7 +158,9 @@ class MagicMath(object):
                 if(self.precedence[op] == self.highest):
 
                     # simplify terms
-                    res = self.solve(op, float(terms[i]), float(terms[i+1]))
+                    x = self.getPercent(terms[i])
+                    y = self.getPercent(terms[i+1])
+                    res = self.solve(op, x, y)
 
                     # pop simplified terms and operator in the list
                     terms[i] = res
@@ -156,7 +176,8 @@ class MagicMath(object):
 
                 i += 1
 
-        result = float(terms[0])
+        # evaluate percentage
+        result = self.getPercent(terms[0])
 
         if result % 1 == 0:
             result = int(result)
@@ -179,7 +200,7 @@ class MagicMath(object):
                 "-": 1
             }
 
-            input = self.e.get().replace("÷", "/")
+            input = self.e.get().replace("÷", "/").replace("×", "*")
 
             try:
                 self.answer = float(self.evaluate(input))

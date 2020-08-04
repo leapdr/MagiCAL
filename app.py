@@ -13,8 +13,8 @@ style.configure("Fixed.TButton", font="TkFixedFont")
 ttk.Style().configure('pad.TEntry', padding='7 7 7 7')
 
 # create input
-input = ttk.Entry(root, style='pad.TEntry')
-input.grid(row=0, column=0, columnspan=4, padx=(5,0), pady=(5,0))
+input = ttk.Entry(root, style='pad.TEntry', width=45)
+input.grid(row=0, column=0, columnspan=6, padx=(5,0), pady=(5,0))
 
 math = MagicMath(input, END)
 
@@ -79,7 +79,7 @@ button_add = Button(root,
         padx=0, pady=0,
         text="+",
         image=button_bg,
-        command=lambda: encode("+")).grid(row=4, column=3, padx=5, pady=(5,0))
+        command=lambda: encode("+")).grid(row=4, column=3, padx=(5,0), pady=(5,0))
 
 button_sub = Button(root,
         bd=0, bg="#ECECEC",
@@ -89,7 +89,7 @@ button_sub = Button(root,
         padx=0, pady=0,
         text="-",
         image=button_bg,
-        command=lambda: encode("-")).grid(row=3, column=3, padx=5, pady=(5,0))
+        command=lambda: encode("-")).grid(row=3, column=3, padx=(5,0), pady=(5,0))
 
 button_mul = Button(root,
         bd=0, bg="#ECECEC",
@@ -97,9 +97,9 @@ button_mul = Button(root,
         highlightthickness=0,
         compound=CENTER,
         padx=0, pady=0,
-        text="*",
+        text="×",
         image=button_bg,
-        command=lambda: encode("*")).grid(row=2, column=3, padx=5, pady=(5,0))
+        command=lambda: encode("×")).grid(row=2, column=3, padx=(5,0), pady=(5,0))
 
 button_div = Button(root,
         bd=0, bg="#ECECEC",
@@ -109,7 +109,7 @@ button_div = Button(root,
         padx=0, pady=0,
         text="÷",
         image=button_bg,
-        command=lambda: encode("÷")).grid(row=1, column=3, padx=5, pady=(5,0))
+        command=lambda: encode("÷")).grid(row=1, column=3, padx=(5,0), pady=(5,0))
 
 button_equal = Button(root,
         bd=0, bg="#ECECEC",
@@ -118,7 +118,7 @@ button_equal = Button(root,
         compound=CENTER,
         padx=0, pady=0,
         text="=",
-        image=button_bg,command=eval).grid(row=4, column=2, padx=(5,0), pady=(5,0))
+        image=button_bg,command=eval).grid(row=4, column=4, padx=(5,0), pady=(5,0))
 
 button_clear = Button(root,
         bd=0, bg="#ECECEC",
@@ -128,7 +128,7 @@ button_clear = Button(root,
         padx=0, pady=0,
         text="C",
         image=button_bg,
-        command=clear).grid(row=5, column=0, padx=(5,0), pady=(5,0))
+        command=clear).grid(row=3, column=4, padx=(5,0), pady=(5,0))
 
 button_open_paren = Button(root,
         bd=0, bg="#ECECEC",
@@ -138,9 +138,9 @@ button_open_paren = Button(root,
         padx=0, pady=0,
         text="(",
         image=button_bg,
-        command=lambda: encode("(")).grid(row=5, column=1, padx=(5,0), pady=(5,0))
+        command=lambda: encode("(")).grid(row=2, column=4, padx=(5,0), pady=(5,0))
 
-button_open_paren = Button(root,
+button_close_paren = Button(root,
         bd=0, bg="#ECECEC",
         borderwidth=0,
         highlightthickness=0,
@@ -148,6 +148,26 @@ button_open_paren = Button(root,
         padx=0, pady=0,
         text=")",
         image=button_bg,
-        command=lambda: encode(")")).grid(row=5, column=2, padx=(5,0), pady=(5,0))
+        command=lambda: encode(")")).grid(row=2, column=5, padx=5, pady=(5,0))
+
+button_mod = Button(root,
+        bd=0, bg="#ECECEC",
+        borderwidth=0,
+        highlightthickness=0,
+        compound=CENTER,
+        padx=0, pady=0,
+        text="mod",
+        image=button_bg,
+        command=lambda: encode(" mod ")).grid(row=1, column=4, padx=(5,0), pady=(5,0))
+
+button_percent = Button(root,
+        bd=0, bg="#ECECEC",
+        borderwidth=0,
+        highlightthickness=0,
+        compound=CENTER,
+        padx=0, pady=0,
+        text="%",
+        image=button_bg,
+        command=lambda: encode("%")).grid(row=4, column=2, padx=(5,0), pady=(5,0))
 
 root.mainloop()
