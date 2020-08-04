@@ -79,7 +79,7 @@ button_add = Button(root,
         padx=0, pady=0,
         text="+",
         image=button_bg,
-        command=lambda: encode("+")).grid(row=4, column=3, padx=(5,0), pady=(5,0))
+        command=lambda: encode("+")).grid(row=4, column=3, padx=5, pady=(5,0))
 
 button_sub = Button(root,
         bd=0, bg="#ECECEC",
@@ -89,7 +89,7 @@ button_sub = Button(root,
         padx=0, pady=0,
         text="-",
         image=button_bg,
-        command=lambda: encode("-")).grid(row=3, column=3, padx=(5,0), pady=(5,0))
+        command=lambda: encode("-")).grid(row=3, column=3, padx=5, pady=(5,0))
 
 button_mul = Button(root,
         bd=0, bg="#ECECEC",
@@ -99,7 +99,7 @@ button_mul = Button(root,
         padx=0, pady=0,
         text="*",
         image=button_bg,
-        command=lambda: encode("*")).grid(row=2, column=3, padx=(5,0), pady=(5,0))
+        command=lambda: encode("*")).grid(row=2, column=3, padx=5, pady=(5,0))
 
 button_div = Button(root,
         bd=0, bg="#ECECEC",
@@ -109,7 +109,7 @@ button_div = Button(root,
         padx=0, pady=0,
         text="÷",
         image=button_bg,
-        command=lambda: encode("÷")).grid(row=1, column=3, padx=(5,0), pady=(5,0))
+        command=lambda: encode("÷")).grid(row=1, column=3, padx=5, pady=(5,0))
 
 button_equal = Button(root,
         bd=0, bg="#ECECEC",
@@ -128,6 +128,26 @@ button_clear = Button(root,
         padx=0, pady=0,
         text="C",
         image=button_bg,
-        command=clear).grid(row=5, column=0, columnspan=4, padx=(5,0), pady=(5,0))
+        command=clear).grid(row=5, column=0, padx=(5,0), pady=(5,0))
+
+button_open_paren = Button(root,
+        bd=0, bg="#ECECEC",
+        borderwidth=0,
+        highlightthickness=0,
+        compound=CENTER,
+        padx=0, pady=0,
+        text="(",
+        image=button_bg,
+        command=lambda: encode("(")).grid(row=5, column=1, padx=(5,0), pady=(5,0))
+
+button_open_paren = Button(root,
+        bd=0, bg="#ECECEC",
+        borderwidth=0,
+        highlightthickness=0,
+        compound=CENTER,
+        padx=0, pady=0,
+        text=")",
+        image=button_bg,
+        command=lambda: encode(")")).grid(row=5, column=2, padx=(5,0), pady=(5,0))
 
 root.mainloop()

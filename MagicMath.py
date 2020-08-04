@@ -1,6 +1,8 @@
 import sys
 import re
 
+from MagicError import *
+
 class MagicMath(object):
     def __init__(self, input, end):
         self.e = input
@@ -9,16 +11,19 @@ class MagicMath(object):
     def validate(self):
         input = self.e.get().replace("÷", "/")
 
-        # TODO include validation for parenthesis
-        pattern = re.compile(r'[0-9]+([\+\-\*\/\^][0-9]+)*')
+        pattern = re.compile(r'^\(*[0-9]+[\(\)]*([\+\-\*\/\^]?[\(\)]*[0-9]+[\(\)]*)*$')
         matches = pattern.finditer(input)
         
         try:
             if(input.count("(") != input.count(")")):
-                ParenthesisError
+                raise ParenthesisError
 
             match = next(matches).group()
-            return match == input or len(input) == 0
+
+            if(match == input or len(input) == 0):
+                return ""
+            else:
+                return "Invalid Input"
         except ParenthesisError:
             return "Malformed Expression"
         except StopIteration:
@@ -28,12 +33,7 @@ class MagicMath(object):
         if(o == "^"):
             return x**y
         elif(o == "/"):
-            try:
-                result = x / y
-                return result
-            except ZeroDivisionError:
-                print("Division by Zero")
-                sys.exit()
+            return x / y
         elif(o == "*"):
             return x * y
         elif(o == "-"):
@@ -58,13 +58,67 @@ class MagicMath(object):
 
         self.highest = highest
 
+    def getIndicesMatchingParen(self, input):
+        i = 0
+        start = 0
+        end = 0
+        start_found = False
+        end_found = False
+        start_extra = 0
+
+        while i < len(input) or not(start_found and end_found):
+            if input[i] == "(" :
+                if not(start_found):
+                    start = i
+                    start_found = True
+                else:
+                    start_extra += 1
+
+            if input[i] == ")":
+                if start_extra > 0:
+                    start_extra -= 1
+                else:
+                    if not(end_found):
+                        end = i
+                        end_found = True
+
+            i += 1
+
+        return (start, end)
+
     def evaluate(self, input):
         # evaluate parentheses
         paren_count = input.count('(')
 
-        if(paren_count > 0):
-            # get parenthesis clause
-            pass
+        while paren_count > 0:
+            # get expression inside parenthesis then evaluate
+            indices = self.getIndicesMatchingParen(input)
+            start = indices[0] + 1
+            end = indices[1]
+
+            exp = input[start:end]
+
+            paren_count -= exp.count('(')
+            ans = self.evaluate(exp)
+
+            # replace parenthesis
+            paren_converted = False
+            char_l, char_r = "", ""
+            if input[start-2].isnumeric():
+                char_l = "*"
+                paren_converted = True
+
+            if end+1 < len(input) and input[end+1].isnumeric():
+                if not(paren_converted):
+                    char_r = "*"
+                else:
+                    raise ParenthesisError
+
+            # restructure input
+            input = input[0:start-1] + char_l + str(ans) + char_r + input[end+1:]
+            print(input)
+
+            paren_count -= 1
 
         # set the terms
         terms = re.split(r'[\/\*\-\+\^]', input)
@@ -102,16 +156,15 @@ class MagicMath(object):
 
                 i += 1
 
-        result = terms[0]
-        return result
+        result = float(terms[0])
 
-    def display(self):
-        # format float with .0
-        if self.answer % 1 == 0:
-            self.answer = int(self.answer)
+        if result % 1 == 0:
+            result = int(result)
+        return str(result)
 
+    def display(self, output):
         self.e.delete(0, self.end)
-        self.e.insert(0, str(self.answer))
+        self.e.insert(0, str(output))
 
     def parse(self):
         error = self.validate()
@@ -127,11 +180,20 @@ class MagicMath(object):
             }
 
             input = self.e.get().replace("÷", "/")
-            self.answer = self.evaluate(input)
+
+            try:
+                self.answer = float(self.evaluate(input))
             
-            # display answer
-            self.display()
+                # format float with .0
+                if self.answer % 1 == 0:
+                    self.answer = int(self.answer)
+
+                # display answer
+                self.display(self.answer)
+            except ParenthesisError:
+                self.display("Malformed Expression")
+            except ZeroDivisionError:
+                self.display("Division by Zero")
 
         else:
-            self.e.delete(0, self.end)
-            self.e.insert(0, error)
+            self.display(error)
