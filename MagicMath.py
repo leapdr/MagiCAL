@@ -11,7 +11,9 @@ class MagicMath(object):
     def validate(self):
         input = self.e.get().replace("÷", "/")
 
-        pattern = re.compile(r'^\(*[0-9]+[\(\)]*([\+\-\*\/\^]?[\(\)]*[0-9]+[\(\)]*)*$')
+        # pattern = re.compile(r'^\(*[0-9]+[\(\)]*([\+\-\*\/\^]?[\(\)]*[0-9]+[\(\)]*)*$')
+
+        pattern = re.compile(r'^\(*(\d+(?:\.\d+)?)[\(\)]*([\+\-\*\/\^]?[\(\)]*(\d+(?:\.\d+)?)[\(\)]*)*$')
         matches = pattern.finditer(input)
         
         try:
@@ -116,16 +118,14 @@ class MagicMath(object):
 
             # restructure input
             input = input[0:start-1] + char_l + str(ans) + char_r + input[end+1:]
-            print(input)
 
             paren_count -= 1
 
         # set the terms
         terms = re.split(r'[\/\*\-\+\^]', input)
 
-        # filter out empty strings from list
-        operators = re.split(r'\d+', input)
         # set the operators
+        operators = re.findall(r'[\/\*\-\+\^]', input)
         operators = list(filter(None, operators))
 
         # set the operator's highest precedence in the equation

@@ -9,8 +9,14 @@ import sys
 # for match in matches:
 #     print(match.group())
 
-string = "asdf"
-print(string[2:])
+string = "3.3"
+pattern = re.compile(r'(\d+(\.\d+)?)')
+matches = pattern.finditer(string)
+
+# for match in matches:
+#     print(match.group())
+operators = re.findall(r'(\d+(?:\.\d+)?)', string)
+print(operators)
 
 sys.exit()
 
