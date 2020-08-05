@@ -2,35 +2,12 @@ import sys
 import re
 
 from MagicError import *
+from MagicInput import *
 
 class MagicMath(object):
     def __init__(self, input, end):
         self.e = input
         self.end = end
-
-    def validate(self):
-        input = self.e.get().replace("÷", "/").replace("×", "*")
-
-        # pattern = re.compile(r'^\(*[0-9]+[\(\)]*([\+\-\*\/\^]?[\(\)]*[0-9]+[\(\)]*)*$')
-        return ""
-
-        pattern = re.compile(r'^\(*(\d+(?:\.\d+)?)\%?[\(\)]*([\+\-\*\/\^]?[\(\)]*(\d+(?:\.\d+)?)\%?[\(\)]*)*$')
-        matches = pattern.finditer(input)
-        
-        try:
-            if(input.count("(") != input.count(")")):
-                raise ParenthesisError
-
-            match = next(matches).group()
-
-            if(match == input or len(input) == 0):
-                return ""
-            else:
-                return "Invalid Input"
-        except ParenthesisError:
-            return "Malformed Expression"
-        except StopIteration:
-            return "Invalid Input"
 
     def getPercent(self, term):
         term = str(term)
@@ -188,7 +165,8 @@ class MagicMath(object):
         self.e.insert(0, str(output))
 
     def parse(self):
-        error = self.validate()
+        m_input = MagicInput(self.e.get())
+        error = m_input.validate()
 
         if error == "":
             # initialize precedence for EMDAS
@@ -200,7 +178,7 @@ class MagicMath(object):
                 "-": 1
             }
 
-            input = self.e.get().replace("÷", "/").replace("×", "*")
+            input = m_input.input
 
             try:
                 self.answer = float(self.evaluate(input))

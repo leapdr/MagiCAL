@@ -1,5 +1,10 @@
-class Error(Exception):
+class Error(Exception): 
+    pass 
+class DecimalError(Error):
     pass
-
-class ParenthesisError(Error):
+class OperatorError(Error):
+    pass
+class ParenthesisError(Error): 
+    pass 
+class PercentSignError(Error):
     pass
