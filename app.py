@@ -16,7 +16,7 @@ ttk.Style().configure('pad.TEntry', padding='7 7 7 7')
 input = ttk.Entry(root, style='pad.TEntry', width=45)
 input.grid(row=0, column=0, columnspan=6, padx=(5,0), pady=(5,0))
 
-math = MagicMath(input, END)
+math = MagicMath("app", input, END)
 
 # encode function
 def encode(val):

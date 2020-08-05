@@ -5,7 +5,8 @@ from MagicError import *
 from MagicInput import *
 
 class MagicMath(object):
-    def __init__(self, input, end):
+    def __init__(self, interface, input, end=0):
+        self.interface = interface
         self.e = input
         self.end = end
 
@@ -13,7 +14,7 @@ class MagicMath(object):
         term = str(term)
         result = 0
 
-        if term[-1] == "%":
+        if term.find("%") and term[-1] == "%":
             result = term[0:-1]
             result = float(result) / 100
         else:
@@ -161,11 +162,18 @@ class MagicMath(object):
         return str(result)
 
     def display(self, output):
-        self.e.delete(0, self.end)
-        self.e.insert(0, str(output))
+        if self.interface == "app":
+            self.e.delete(0, self.end)
+            self.e.insert(0, str(output))
+        elif self.interface == "cli":
+            print(f"{output}\n")
 
     def parse(self):
-        m_input = MagicInput(self.e.get())
+        if self.interface == "app":
+            m_input = MagicInput(self.e.get())
+        elif self.interface == "cli":
+            m_input = MagicInput(self.e)
+
         error = m_input.validate()
 
         if error == "":

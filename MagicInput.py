@@ -77,7 +77,7 @@ class MagicInput(object):
             if l > 0:
                 raise ParenthesisError
 
-            return True
+            return ""
         except DecimalError:
             return "Decimal Error"
         except OperatorError:
