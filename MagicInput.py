@@ -3,16 +3,14 @@ import re
 
 from MagicError import *
 
+SIGNS = ["+", "-"]
+OPS = ["*", "/", "+", "-", "m"]
+FUNCS = ["s", "S", "c", "C", "t", "T"]
+
 class MagicInput(object):
     def __init__(self, input):
         # serialize input
         self.input = input.replace("÷", "/").replace("×", "*").replace(" ", "").replace("mod", "m").replace("sin", "s").replace("sinH", "S").replace("cos", "c").replace("cosh", "C").replace("tan", "t").replace("tanh", "T")
-
-        # TODO replace functions with single character
-
-        self.ops = ["*", "/", "+", "/", "m"]
-        self.signs = ["+", "-"]
-        self.funcs = ["s", "S", "c", "C", "t", "T"]
 
     def validate(self):
         input = self.input
@@ -29,7 +27,7 @@ class MagicInput(object):
                 # TODO variables
 
                 # alphabet
-                if c.isalpha() and (c not in self.funcs or c not in self.ops):
+                if c.isalpha() and (c not in FUNCS or c not in OPS):
                     raise UnrecognizedCharacter
 
                 # decimal
@@ -38,7 +36,7 @@ class MagicInput(object):
                     if c == "." or is_dot_used:
                         raise DecimalError
                     # .*, ./, .+, .(, .%, .s
-                    if c in self.ops or c == "(" or c == "%" or c in self.funcs:
+                    if c in OPS or c == "(" or c == "%" or c in FUNCS:
                         raise DecimalError
                     else:
                         # 23.84.57
@@ -50,10 +48,10 @@ class MagicInput(object):
                     # ss - sin sin, cC - cos hyper cos
                     # s*, T/
                     # s%
-                    if not c.isnumeric() and c != "(" and c not in self.signs:
+                    if not c.isnumeric() and c != "(" and c not in SIGNS:
                         raise UnrecognizedFunction
                     # s-+1
-                    elif c in self.signs and input[i+1] in self.signs:
+                    elif c in SIGNS and input[i+1] in SIGNS:
                         raise OperatorError(0)
                     is_sign_used = is_op_used = False
 
@@ -62,7 +60,7 @@ class MagicInput(object):
                     is_sign_used = is_op_used = False
 
                 # percentage, %%, %34, %.
-                if is_per and c not in self.ops and c not in self.funcs and c != "(":
+                if is_per and c not in OPS and c not in SIGNS and c != "(":
                     raise PercentSignError
 
                 # parentheses
@@ -84,8 +82,8 @@ class MagicInput(object):
 
                 # assign for next character validation
                 is_dot = c == "."
-                is_op = c in self.ops
-                is_sign = c in self.signs
+                is_op = c in OPS
+                is_sign = c in SIGNS
 
                 # operator and sign
                 if is_op:
@@ -105,7 +103,7 @@ class MagicInput(object):
 
                     is_dot_used = False
 
-                is_func = c in self.funcs
+                is_func = c in FUNCS
                 is_per = c == "%"
 
                 i += 1
@@ -129,24 +127,31 @@ class MagicInput(object):
             return "Unrecognized Function or Operation"
         except ParenthesisError:
             return "Malformed Expression"
+    
+    @staticmethod
+    def getTermsAndOps(expr):
+        terms = []
+        ops = []
 
-        # pattern = re.compile(r'^\(*[0-9]+[\(\)]*([\+\-\*\/\^]?[\(\)]*[0-9]+[\(\)]*)*$')
-        # return ""
+        i, t = 0, 0
+        is_sign_used = False
+        tmp_str = ""
 
-        # pattern = re.compile(r'^\(*(\d+(?:\.\d+)?)\%?[\(\)]*([\+\-\*\/\^]?[\(\)]*(\d+(?:\.\d+)?)\%?[\(\)]*)*$')
-        # matches = pattern.finditer(input)
-        
-        # try:
-        #     if(input.count("(") != input.count(")")):
-        #         raise ParenthesisError
+        # +1-+1
+        for c in expr:
+            if c in OPS:
+                if c in SIGNS and not is_sign_used:
+                    is_sign_used = True
+                    tmp_str = tmp_str + c
+                else:
+                    ops.append(c)
+                    terms.append(tmp_str)
 
-        #     match = next(matches).group()
+                    t += 1
+                    tmp_str = ""
+                    is_sign_used = False
+            else:
+                tmp_str = tmp_str + c
+        terms.append(tmp_str)
 
-        #     if(match == input or len(input) == 0):
-        #         return ""
-        #     else:
-        #         return "Invalid Input"
-        # except ParenthesisError:
-        #     return "Malformed Expression"
-        # except StopIteration:
-        #     return "Invalid Input"
+        return (terms, ops)

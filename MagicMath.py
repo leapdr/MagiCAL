@@ -42,7 +42,7 @@ class MagicMath(object):
         for op in operators:
             if highest == 0 and (op == "+" or op == "-"):
                 highest = 1
-            elif highest <= 1 and (op == "*" or op == "/"):
+            elif highest <= 1 and (op == "*" or op == "/" or op == "m"):
                 highest = 2
             elif highest <= 2 and (op == "^"):
                 highest = 3
@@ -117,12 +117,9 @@ class MagicMath(object):
 
             paren_count -= 1
 
-        # set the terms
-        terms = re.split(r'[\/\*\-\+\^]', input)
-
-        # set the operators
-        operators = re.findall(r'[\/\*\-\+\^]', input)
-        operators = list(filter(None, operators))
+        # set the terms and operators
+        parts = MagicInput.getTermsAndOps(input)
+        terms, operators = parts[0], parts[1]
 
         # set the operator's highest precedence in the equation
         self.assessPrecedence(operators)
