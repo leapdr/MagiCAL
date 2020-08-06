@@ -166,7 +166,7 @@ class MagicMath(object):
             self.e.delete(0, self.end)
             self.e.insert(0, str(output))
         elif self.interface == "cli":
-            print(f"{output}\n")
+            print(f"{output}")
 
     def parse(self):
         if self.interface == "app":
@@ -203,4 +203,4 @@ class MagicMath(object):
                 self.display("Division by Zero")
 
         else:
-            self.display(error)
+            self.display(f"{m_input.input}: {error}")
