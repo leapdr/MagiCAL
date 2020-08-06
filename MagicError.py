@@ -8,3 +8,9 @@ class ParenthesisError(Error):
     pass 
 class PercentSignError(Error):
     pass
+
+class UnrecognizedFunction(Error):
+    pass
+
+class UnrecognizedCharacter(Error):
+    pass
