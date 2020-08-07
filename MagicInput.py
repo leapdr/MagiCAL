@@ -27,7 +27,7 @@ class MagicInput(object):
                 # TODO variables
 
                 # alphabet
-                if c.isalpha() and (c not in FUNCS or c not in OPS):
+                if c.isalpha() and not (c in FUNCS or c in OPS):
                     raise UnrecognizedCharacter
 
                 # decimal
@@ -51,7 +51,7 @@ class MagicInput(object):
                     if not c.isnumeric() and c != "(" and c not in SIGNS:
                         raise UnrecognizedFunction
                     # s-+1
-                    elif c in SIGNS and input[i+1] in SIGNS:
+                    elif c in SIGNS and input[i+1] in OPS:
                         raise OperatorError(0)
                     is_sign_used = is_op_used = False
 

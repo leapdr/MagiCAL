@@ -1,26 +1,28 @@
 import sys
 import re
 
+from math import *
+
 from MagicError import *
 from MagicInput import *
+
+ANGLE_DEFAULT = lambda x: radians(x)
+
+FUNC_EVAL = {
+    "s": lambda x: sin(ANGLE_DEFAULT(x)),
+    "S": lambda x: sinh(ANGLE_DEFAULT(x)),
+    "c": lambda x: cos(ANGLE_DEFAULT(x)),
+    "C": lambda x: cosh(ANGLE_DEFAULT(x)),
+    "t": lambda x: tan(ANGLE_DEFAULT(x)),
+    "T": lambda x: tanh(ANGLE_DEFAULT(x)),
+    "a": lambda x: abs(x)
+}
 
 class MagicMath(object):
     def __init__(self, interface, input, end=0):
         self.interface = interface
         self.e = input
         self.end = end
-
-    def getPercent(self, term):
-        term = str(term)
-        result = 0
-
-        if term.find("%") and term[-1] == "%":
-            result = term[0:-1]
-            result = float(result) / 100
-        else:
-            result = float(term)
-
-        return result
 
     def solve(self, o, x, y):
         if(o == "^"):
@@ -79,6 +81,39 @@ class MagicMath(object):
 
         return (start, end)
 
+    def evaluateTerm(self, term):
+        term = str(term)
+
+        try:
+            # no need term evaluation
+            result = float(term)
+            return result
+        except ValueError:
+            # has to be evaluated
+            result = 0
+
+            # get decimal value
+            p = re.compile(r"[\+\-]?\d*[\.\d+]?")
+            d = list(filter(None, [m.group() for m in p.finditer(term)])).pop()
+            i = term.index(d)
+
+            d = float(d)
+            # left
+            if i-1 >= 0:
+                l = term[i-1]
+                # function
+                if l in FUNCS:
+                    result = FUNC_EVAL[l](d)
+                else:
+                    result = d
+
+            # right
+            # percentage
+            if term[-1] == "%":
+                result /= 100
+
+            return result
+
     def evaluate(self, input):
         # evaluate parentheses
         paren_count = input.count('(')
@@ -109,7 +144,7 @@ class MagicMath(object):
                     else:
                         raise ParenthesisError
                 elif input[end+1] == "%":
-                    ans = self.getPercent(f"{ans}%")
+                    ans = self.evaluateTerm(f"{ans}%")
                     percent_adjust = 1
 
             # restructure input
@@ -133,8 +168,9 @@ class MagicMath(object):
                 if(self.precedence[op] == self.highest):
 
                     # simplify terms
-                    x = self.getPercent(terms[i])
-                    y = self.getPercent(terms[i+1])
+                    x = self.evaluateTerm(terms[i])
+                    y = self.evaluateTerm(terms[i+1])
+
                     res = self.solve(op, x, y)
 
                     # pop simplified terms and operator in the list
@@ -152,7 +188,7 @@ class MagicMath(object):
                 i += 1
 
         # evaluate percentage
-        result = self.getPercent(terms[0])
+        result = self.evaluateTerm(terms[0])
 
         if result % 1 == 0:
             result = int(result)
