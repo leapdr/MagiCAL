@@ -29,6 +29,8 @@ class MagicMath(object):
             return x**y
         elif(o == "/"):
             return x / y
+        elif(o == "m"):
+            return x % y
         elif(o == "*"):
             return x * y
         elif(o == "-"):
@@ -215,6 +217,7 @@ class MagicMath(object):
                 "^": 3,
                 "/": 2,
                 "*": 2,
+                "m": 2,
                 "+": 1,
                 "-": 1
             }

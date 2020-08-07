@@ -137,11 +137,13 @@ class MagicInput(object):
         is_sign_used = False
         tmp_str = ""
 
-        # +1-+1
+        x = 0
         for c in expr:
             if c in OPS:
-                if c in SIGNS and not is_sign_used:
-                    is_sign_used = True
+                left = not(x != 0 and expr[x-1].isnumeric())
+                right = expr[x+1] not in SIGNS
+
+                if c in SIGNS and right and left:
                     tmp_str = tmp_str + c
                 else:
                     ops.append(c)
@@ -152,6 +154,10 @@ class MagicInput(object):
                     is_sign_used = False
             else:
                 tmp_str = tmp_str + c
+            x += 1
         terms.append(tmp_str)
+
+        print(terms)
+        print(ops)
 
         return (terms, ops)
