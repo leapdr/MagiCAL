@@ -95,7 +95,7 @@ class MagicMath(object):
             result = 0
 
             # get decimal value
-            p = re.compile(r"[\+\-]?\d*[\.\d+]?")
+            p = re.compile(r"([\+\-]?\d*(\.\d+)?)")
             d = list(filter(None, [m.group() for m in p.finditer(term)])).pop()
             i = term.index(d)
 
@@ -189,7 +189,7 @@ class MagicMath(object):
 
                 i += 1
 
-        # evaluate percentage
+        # evaluate term
         result = self.evaluateTerm(terms[0])
 
         if result % 1 == 0:
