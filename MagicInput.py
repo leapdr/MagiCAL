@@ -168,7 +168,4 @@ class MagicInput(object):
             x += 1
         terms.append(tmp_str)
 
-        print(terms)
-        print(ops)
-
         return (terms, ops)
