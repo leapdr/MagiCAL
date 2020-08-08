@@ -71,7 +71,8 @@ class MagicInput(object):
                     is_sign_used = is_op_used = False
 
                 # percentage, %%, %34, %.
-                if is_per and c not in OPS and c not in SIGNS and c != "(":
+                # cos(sin(5%)+sin(8-2))
+                if is_per and c not in OPS and c != ")":
                     raise PercentSignError
 
                 # parentheses
@@ -167,5 +168,8 @@ class MagicInput(object):
                 tmp_str = tmp_str + c
             x += 1
         terms.append(tmp_str)
+
+        # print(terms)
+        # print(ops)
 
         return (terms, ops)

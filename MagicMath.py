@@ -148,6 +148,8 @@ class MagicMath(object):
                     result = FUNC_EVAL[l](d)
                 else:
                     result = d
+            else:
+                result = d
 
             # right
             # percentage
@@ -174,9 +176,16 @@ class MagicMath(object):
             # replace parenthesis
             paren_converted = False
             char_l, char_r = "", ""
-            if input[start-2].isnumeric():
+            left = input[start-2]
+            less_func = 0
+
+            if left.isnumeric():
                 char_l = "*"
                 paren_converted = True
+            elif left in FUNCS:
+                ans = self.evaluateTerm(f"{left}{ans}")
+                paren_converted = True
+                less_func += 1
 
             percent_adjust = 0
             if end+1 < len(input):
@@ -190,7 +199,7 @@ class MagicMath(object):
                     percent_adjust = 1
 
             # restructure input
-            input = input[0:start-1] + char_l + str(ans) + char_r + input[end+1+percent_adjust:]
+            input = input[0:start-1-less_func] + char_l + str(ans) + char_r + input[end+1+percent_adjust:]
 
             paren_count -= 1
 
