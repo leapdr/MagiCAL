@@ -24,6 +24,9 @@ def encode(val):
     clear()
     input.insert(0, f"{current}{val}")
 
+def factorizeInput():
+    math.factorize()
+
 # clear function
 def clear():
     input.delete(0, END)
@@ -185,7 +188,7 @@ button_percent = Button(root,
         image=button_bg,
         command=lambda: encode("%")).grid(row=4, column=2, padx=(5,0), pady=(5,0))
 
-# create function buttons
+# create trigonometric function buttons
 button_sin = Button(root,
         bd=0, bg="#ECECEC",
         borderwidth=0,
@@ -232,7 +235,7 @@ button_tan = Button(root,
         highlightthickness=0,
         compound=CENTER,
         padx=0, pady=0,
-        text="t",
+        text="tan",
         image=button_bg,
         command=lambda: encode("tan ")).grid(row=1, column=7, padx=5, pady=(5,0))
 
@@ -245,5 +248,16 @@ button_tanh = Button(root,
         text="tanh",
         image=button_bg,
         command=lambda: encode("tanh ")).grid(row=2, column=7, padx=5, pady=(5,0))
+
+# create factorize button
+button_tanh = Button(root,
+        bd=0, bg="#ECECEC",
+        borderwidth=0,
+        highlightthickness=0,
+        compound=CENTER,
+        padx=0, pady=0,
+        text="axb",
+        image=button_bg,
+        command=factorizeInput).grid(row=4, column=5, padx=5, pady=(5,0))
 
 root.mainloop()

@@ -31,3 +31,14 @@ class UnrecognizedFunction(Error):
 
 class UnrecognizedCharacter(Error):
     pass
+
+class InputError(Error):
+    def __init__(self, error_type, error_message = ""):
+        base_message = "Input Error: "
+        if(error_type == 0):
+            type_message = "Integer required"
+
+        self.message = base_message + type_message + error_message
+
+    def __str__(self):
+        return self.message

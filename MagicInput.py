@@ -3,6 +3,11 @@ import re
 
 from MagicError import *
 
+TOSYMBOL = {
+    "*": "×",
+    "/": "÷"
+}
+
 SIGNS = ["+", "-"]
 OPS = ["*", "/", "+", "-", "m"]
 FUNCS = ["s", "S", "c", "C", "t", "T"]
@@ -10,7 +15,13 @@ FUNCS = ["s", "S", "c", "C", "t", "T"]
 class MagicInput(object):
     def __init__(self, input):
         # serialize input
+        if type(input) != str:
+            input = str(input)
+
         self.input = input.replace("÷", "/").replace("×", "*").replace(" ", "").replace("mod", "m").replace("sin", "s").replace("sinH", "S").replace("cos", "c").replace("cosh", "C").replace("tan", "t").replace("tanh", "T")
+
+    def isInteger(self):
+        return self.input.isnumeric()
 
     def validate(self):
         input = self.input

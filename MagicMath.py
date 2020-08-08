@@ -24,6 +24,46 @@ class MagicMath(object):
         self.e = input
         self.end = end
 
+    def getInput(self):
+        m_input = ""
+        if self.interface == "app":
+            m_input = MagicInput(self.e.get())
+        elif self.interface == "cli":
+            m_input = MagicInput(self.e)
+
+        return m_input
+
+    def factorize(self):
+        m_input = self.getInput()
+
+        try:
+            if not(m_input.isInteger()):
+                raise InputError(0)
+            elif m_input == "": 
+                self.display(0, " to factorize")
+            else:
+                x = m_input.input
+                # convert list item to string
+                terms = [str(x) for x in self.getFactors(int(x))]
+                self.display(TOSYMBOL["*"].join(terms))
+        except OperatorError as e:
+            self.display(str(e))
+
+        
+    def getFactors(self, x):
+
+        terms = []
+        c = 2
+        while x != 1:
+            if x % c == 0:
+                x /= c
+                terms.append(c)
+                c = 2
+            else:
+                c += 1
+        
+        return terms
+
     def solve(self, o, x, y):
         if(o == "^"):
             return x**y
@@ -204,10 +244,7 @@ class MagicMath(object):
             print(f"{output}")
 
     def parse(self):
-        if self.interface == "app":
-            m_input = MagicInput(self.e.get())
-        elif self.interface == "cli":
-            m_input = MagicInput(self.e)
+        m_input = self.getInput()
 
         error = m_input.validate()
 
