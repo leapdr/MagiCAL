@@ -15,7 +15,7 @@ FUNC_EVAL = {
     "C": lambda x: cosh(ANGLE_DEFAULT(x)),
     "t": lambda x: tan(ANGLE_DEFAULT(x)),
     "T": lambda x: tanh(ANGLE_DEFAULT(x)),
-    "a": lambda x: abs(x)
+    "a": lambda x: abs(x),
 }
 
 class MagicMath(object):

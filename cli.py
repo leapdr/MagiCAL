@@ -52,12 +52,12 @@ Function List:
 (32) - [twos(x)] Two's Complement
 """
 avail_func = {
-    "9": "cos",
-    "10": "cosh",
-    "23": "sin",
-    "24": "sinh",
-    "28": "tan",
-    "29": "tanh",
+    "9": ("cos", "c"),
+    "10": ("cosh", "C"),
+    "23": ("sin", "s"),
+    "24": ("sinh", "S"),
+    "28": ("tan", "t"),
+    "29": ("tanh", "T"),
 }
 
 print(intro_message)
@@ -82,13 +82,11 @@ while com != "-":
         f = input("Select function: ")
 
         if f in avail_func.keys():
-            function = avail_func[f]
+            function = avail_func[f][1]
             expr = input("Enter x: ")
 
-            math = MagicMath("cli", function + expr)
-            m_input = math.getInput()
-            result = math.evaluateTerm(m_input.input)
-
+            math = MagicMath("cli", expr)
+            result = FUNC_EVAL[function](float(expr))
             math.display(result)
 
         else:

@@ -10,7 +10,7 @@ TOSYMBOL = {
 
 SIGNS = ["+", "-"]
 OPS = ["*", "/", "+", "-", "m"]
-FUNCS = ["s", "S", "c", "C", "t", "T", "l", "L"]
+FUNCS = ["a", "s", "S", "c", "C", "t", "T", "l", "L"]
 
 class MagicInput(object):
     def __init__(self, input):
