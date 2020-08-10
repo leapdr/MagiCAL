@@ -60,15 +60,6 @@ class MagicInput(object):
                     if is_op and not is_sign:
                         raise OperatorError(1)
                 else:
-                    # print(p)
-                    # print(f"is op {is_op}")
-                    # print(f"is sign {is_sign}")
-                    # print(f"is dot {is_dot}")
-                    # print(f"is per {is_per}")
-                    # print(f"is alpha {is_alpha}")
-                    # print(f"is num {is_num}")
-                    # print()
-
                     is_op = c in OPS
                     is_sign = c in SIGNS
                     is_dot = c == "."
@@ -87,7 +78,7 @@ class MagicInput(object):
                         elif p == "%":
                             raise PercentSignError
                         fn = ""
-                        is_op_used = False
+                        is_sign_used = is_op_used = False
 
                     # function, alphabet
                     elif is_alpha:
@@ -101,11 +92,19 @@ class MagicInput(object):
                             raise DecimalError
                         is_op_used = False
 
+                        if n == "":
+                            raise InputError(1)
+
                     # decimal point / dot
                     elif is_dot:
                         if is_dot_used or p == ".":
                             raise DecimalError
                         is_op_used = False
+
+                        if n == "":
+                            raise DecimalError
+
+                        is_sign_used = is_op_used = False
 
                     # percent
                     elif is_per:
@@ -121,7 +120,7 @@ class MagicInput(object):
                         elif alp and p not in OPS:
                             raise OperatorError(2)
                         elif p in OPS:
-                            if p not in SIGNS or (p in SIGNS and is_sign_used):
+                            if c not in SIGNS or (p in SIGNS and is_sign_used):
                                 raise OperatorError(2)
 
                         if not is_op_used:
@@ -130,6 +129,9 @@ class MagicInput(object):
                             is_sign_used = True
 
                         is_dot_used = False
+
+                        if n == "":
+                            raise OperatorError(3)
 
                     # parentheses
                     if c == "(":
@@ -162,6 +164,8 @@ class MagicInput(object):
         except DecimalError:
             return "Decimal Error"
         except OperatorError as e:
+            return str(e)
+        except InputError as e:
             return str(e)
         except PercentSignError:
             return "Misplaced Percentage"

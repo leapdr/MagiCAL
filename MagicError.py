@@ -37,6 +37,8 @@ class InputError(Error):
         base_message = "Input Error: "
         if(error_type == 0):
             type_message = "Integer required"
+        if(error_type == 1):
+            type_message = "Insuficient input for function"
 
         self.message = base_message + type_message + error_message
 
