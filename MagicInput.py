@@ -10,7 +10,8 @@ TOSYMBOL = {
 
 SIGNS = ["+", "-"]
 OPS = ["*", "/", "+", "-", "m"]
-FUNCS = ["a", "s", "S", "c", "C", "t", "T", "l", "L"]
+FUNCS2 = ["a", "s", "S", "c", "C", "t", "T", "l", "L"]
+FUNCS = ["abs", "sin", "sinh", "cos", "cosh", "tan", "tanh", "ln", "log"]
 
 class MagicInput(object):
     def __init__(self, input):
@@ -18,7 +19,7 @@ class MagicInput(object):
         if type(input) != str:
             input = str(input)
 
-        self.input = input.replace("÷", "/").replace("×", "*").replace(" ", "").replace("mod", "m").replace("sin", "s").replace("sinH", "S").replace("cos", "c").replace("cosh", "C").replace("tan", "t").replace("tanh", "T")
+        self.input = input.replace("÷", "/").replace("×", "*").replace(" ", "").replace("mod", "m")
 
     def isInteger(self):
         return self.input.isnumeric()
@@ -26,97 +27,128 @@ class MagicInput(object):
     def validate(self):
         input = self.input
 
+        print(input)
+
         try:
             l = 0
 
             # init flags
-            is_opened = is_op = is_sign = is_dot = is_dot_used = False
-            is_sign_used = is_op_used = is_per = is_func = False
+            is_opened = False
+            is_op = False
+            is_sign = False
+            is_dot = False
+            is_per = False
+            is_func = False
+            is_alpha = False
+            is_num = False
+            is_sign_used = False
+            is_op_used = False
+            is_dot_used = False
 
             i = 0
+            fn = p = ""
+            f = 0
             for c in input:
-                # TODO variables
+                if p == "":
+                    p = c
 
-                # alphabet
-                if c.isalpha() and not (c in FUNCS or c in OPS):
-                    raise UnrecognizedCharacter
+                    # assign
+                    is_op = p in OPS
+                    is_sign = p in SIGNS
 
-                # decimal
-                if is_dot: 
-                    # ..
-                    if c == "." or is_dot_used:
-                        raise DecimalError
-                    # .*, ./, .+, .(, .%, .s
-                    if c in OPS or c == "(" or c == "%" or c in FUNCS:
-                        raise DecimalError
-                    else:
-                        # 23.84.57
-                        is_dot_used = True
-                    is_sign_used = is_op_used = False
-
-                # function
-                if is_func:
-                    # ss - sin sin, cC - cos hyper cos
-                    # s*, T/
-                    # s%
-                    if not c.isnumeric() and c != "(" and c not in SIGNS:
-                        raise UnrecognizedFunction
-                    # s-+1
-                    elif c in SIGNS and input[i+1] in OPS:
-                        raise OperatorError(0)
-                    is_sign_used = is_op_used = False
-
-                # number
-                if c.isnumeric():
-                    is_sign_used = is_op_used = False
-
-                # percentage, %%, %34, %.
-                # cos(sin(5%)+sin(8-2))
-                if is_per and c not in OPS and c != ")":
-                    raise PercentSignError
-
-                # parentheses
-                if c == "(":
-                    is_sign_used = is_op_used = False
-                    l += 1
-                    is_opened = True
-                elif c == ")":
-                    # ()
-                    if is_opened:
-                        raise ParenthesisError
-                    l -= 1
+                    # illegal start of expression
+                    if is_op and not is_sign:
+                        raise OperatorError(1)
                 else:
-                    is_opened = False
+                    # print(p)
+                    # print(f"is op {is_op}")
+                    # print(f"is sign {is_sign}")
+                    # print(f"is dot {is_dot}")
+                    # print(f"is per {is_per}")
+                    # print(f"is alpha {is_alpha}")
+                    # print(f"is num {is_num}")
+                    # print()
 
-                # mismatch right, terminate loop
-                if l < 0:
-                    raise ParenthesisError
+                    is_op = c in OPS
+                    is_sign = c in SIGNS
+                    is_dot = c == "."
+                    is_per = c == "%"
+                    is_alpha = c.isalpha()
+                    is_num = c.isnumeric()
 
-                # assign for next character validation
-                is_dot = c == "."
-                is_op = c in OPS
-                is_sign = c in SIGNS
+                    n = ""
+                    if i + 1 < len(input):
+                        n = input[i+1]
 
-                # operator and sign
-                if is_op:
-                    if not is_op_used :
-                        # /, * begining of expression
-                        if not is_sign and i == 0:
-                            raise OperatorError(1)
+                    # number
+                    if is_num:
+                        if p.isalpha() and fn not in FUNCS and fn not in OPS:
+                            raise UnrecognizedCharacter
+                        elif p == "%":
+                            raise PercentSignError
+                        fn = ""
+                        is_op_used = False
 
-                        is_op_used = True
+                    # function, alphabet
+                    elif is_alpha:
+                        fn += c
 
-                    elif is_sign and not is_sign_used:
-                        is_sign_used = True
+                        if p == "%":
+                            raise PercentSignError
+                        elif p == ")":
+                            raise ParenthesisError
+                        elif p == ".":
+                            raise DecimalError
+                        is_op_used = False
 
-                    # +x, -/, +++, --*
+                    # decimal point / dot
+                    elif is_dot:
+                        if is_dot_used or p == ".":
+                            raise DecimalError
+                        is_op_used = False
+
+                    # percent
+                    elif is_per:
+                        alp = p.isalpha()
+                        if alp or p == "." or p in OPS:
+                            raise PercentSignError
+
+                    # operators
+                    elif is_op:
+                        alp = p.isalpha()
+                        if p == ".":
+                            raise DecimalError
+                        elif alp and p not in OPS:
+                            raise OperatorError(2)
+                        elif p in OPS:
+                            if p not in SIGNS or (p in SIGNS and is_sign_used):
+                                raise OperatorError(2)
+
+                        if not is_op_used:
+                            is_op_used = True
+                        elif c in SIGNS and not is_sign_used:
+                            is_sign_used = True
+
+                        is_dot_used = False
+
+                    # parentheses
+                    if c == "(":
+                        is_sign_used = is_op_used = False
+                        l += 1
+                        is_opened = True
+                    elif c == ")":
+                        # ()
+                        if is_opened:
+                            raise ParenthesisError
+                        l -= 1
                     else:
-                        raise OperatorError(2)
+                        is_opened = False
 
-                    is_dot_used = False
+                    # mismatch right, terminate loop
+                    if l < 0:
+                        raise ParenthesisError
 
-                is_func = c in FUNCS
-                is_per = c == "%"
+                    p = c
 
                 i += 1
 
