@@ -9,13 +9,13 @@ from MagicInput import *
 ANGLE_DEFAULT = lambda x: radians(x)
 
 FUNC_EVAL = {
-    "s": lambda x: sin(ANGLE_DEFAULT(x)),
-    "S": lambda x: sinh(ANGLE_DEFAULT(x)),
-    "c": lambda x: cos(ANGLE_DEFAULT(x)),
-    "C": lambda x: cosh(ANGLE_DEFAULT(x)),
-    "t": lambda x: tan(ANGLE_DEFAULT(x)),
-    "T": lambda x: tanh(ANGLE_DEFAULT(x)),
-    "a": lambda x: abs(x),
+    "sin": lambda x: sin(ANGLE_DEFAULT(x)),
+    "sinh": lambda x: sinh(ANGLE_DEFAULT(x)),
+    "cos": lambda x: cos(ANGLE_DEFAULT(x)),
+    "cosh": lambda x: cosh(ANGLE_DEFAULT(x)),
+    "tan": lambda x: tan(ANGLE_DEFAULT(x)),
+    "tanh": lambda x: tanh(ANGLE_DEFAULT(x)),
+    "abs": lambda x: abs(x),
 }
 
 class MagicMath(object):
@@ -139,22 +139,24 @@ class MagicMath(object):
             d = list(filter(None, [m.group() for m in p.finditer(term)])).pop()
             i = term.index(d)
 
-            d = float(d)
+            pfn = re.compile(r"|".join(FUNCS))
+            fns = list(filter(None, [m.group() for m in pfn.finditer(term)]))
+
+            f = float(d)
             # left
-            if i-1 >= 0:
-                l = term[i-1]
-                # function
-                if l in FUNCS:
-                    result = FUNC_EVAL[l](d)
-                else:
-                    result = d
-            else:
-                result = d
+            i = len(fns)-1
+            while i >= 0:
+                f = FUNC_EVAL[fns[i]](f)
+                i -= 1
+            result = f
 
             # right
             # percentage
-            if term[-1] == "%":
-                result /= 100
+            j = len(d)+i
+            while j < len(term):
+                if term[j] == "%":
+                    result /= 100
+                j+=1
 
             return result
 

@@ -19,7 +19,7 @@ class MagicInput(object):
         if type(input) != str:
             input = str(input)
 
-        self.input = input.replace("÷", "/").replace("×", "*").replace(" ", "").replace("mod", "m")
+        self.input = input.replace("÷", "/").replace("×", "*").replace("mod", "m")
 
     def isInteger(self):
         return self.input.isnumeric()
@@ -54,11 +54,22 @@ class MagicInput(object):
                     # assign
                     is_op = p in OPS
                     is_sign = p in SIGNS
+                    is_alpha = p.isalpha()
+
+                    if is_alpha:
+                        fn += p
 
                     # illegal start of expression
                     if is_op and not is_sign:
                         raise OperatorError(1)
+                    elif c == "%":
+                        raise PercentSignError
                 else:
+                    if c == " ":
+                        if fn in FUNCS:
+                            fn = ""
+                        continue
+
                     is_op = c in OPS
                     is_sign = c in SIGNS
                     is_dot = c == "."
