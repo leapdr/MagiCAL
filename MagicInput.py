@@ -45,10 +45,9 @@ class MagicInput(object):
             is_op_used = False
             is_dot_used = False
 
-            i = 0
             fn = p = ""
             f = 0
-            for c in input:
+            for i, c in enumerate(input):
                 if p == "":
                     p = c
 
@@ -99,11 +98,12 @@ class MagicInput(object):
                     elif is_dot:
                         if is_dot_used or p == ".":
                             raise DecimalError
-                        is_op_used = False
 
                         if n == "":
                             raise DecimalError
-
+                        
+                        is_dot_used = True
+                        is_op_used = False
                         is_sign_used = is_op_used = False
 
                     # percent
@@ -128,10 +128,10 @@ class MagicInput(object):
                         elif c in SIGNS and not is_sign_used:
                             is_sign_used = True
 
-                        is_dot_used = False
-
                         if n == "":
                             raise OperatorError(3)
+
+                        is_dot_used = False
 
                     # parentheses
                     if c == "(":
@@ -151,8 +151,6 @@ class MagicInput(object):
                         raise ParenthesisError
 
                     p = c
-
-                i += 1
 
             # mismatch left, end of string
             if l > 0:
@@ -186,7 +184,7 @@ class MagicInput(object):
         tmp_str = ""
 
         x = 0
-        for c in expr:
+        for x, c in enumerate(expr):
             if c in OPS:
                 left = not(x != 0 and expr[x-1].isnumeric())
                 right = expr[x+1] not in SIGNS
@@ -202,7 +200,6 @@ class MagicInput(object):
                     is_sign_used = False
             else:
                 tmp_str = tmp_str + c
-            x += 1
         terms.append(tmp_str)
 
         # print(terms)

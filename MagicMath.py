@@ -212,10 +212,7 @@ class MagicMath(object):
 
         while len(terms) > 1:
             # evaluate terms with highest operator precedence
-            i = 0
-            while i < len(operators):
-                op = operators[i]
-
+            for i, op in enumerate(operators):
                 if(self.precedence[op] == self.highest):
 
                     # simplify terms
@@ -235,8 +232,6 @@ class MagicMath(object):
 
                     # break the loop to restart
                     break
-
-                i += 1
 
         # evaluate term
         result = self.evaluateTerm(terms[0])
