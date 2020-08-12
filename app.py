@@ -1,5 +1,10 @@
+import sys
+
 from tkinter import *
 from tkinter import ttk as ttk
+
+sys.path.insert(1, "./src")
+
 from MagicMath import MagicMath
 
 root = Tk()
