@@ -49,7 +49,6 @@ class MagicMath(object):
         except OperatorError as e:
             self.display(str(e))
 
-        
     def getFactors(self, x):
 
         terms = []
@@ -63,6 +62,14 @@ class MagicMath(object):
                 c += 1
         
         return terms
+
+    def getFactorial(self, x):
+        result = 1
+        while x != 0:
+            result *= x
+            x -= 1
+
+        return result
 
     def solve(self, o, x, y):
         if(o == "^"):
@@ -141,8 +148,8 @@ class MagicMath(object):
 
             pfn = re.compile(r"|".join(FUNCS))
             fns = list(filter(None, [m.group() for m in pfn.finditer(term)]))
-
             f = float(d)
+
             # left
             i = len(fns)-1
             while i >= 0:
@@ -151,11 +158,12 @@ class MagicMath(object):
             result = f
 
             # right
-            # percentage
             j = len(d)+i
             while j < len(term):
                 if term[j] == "%":
                     result /= 100
+                elif term[j] == "%":
+                    result = self.getFactorial(result)
                 j+=1
 
             return result

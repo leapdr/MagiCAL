@@ -27,8 +27,6 @@ class MagicInput(object):
     def validate(self):
         input = self.input
 
-        print(input)
-
         try:
             l = 0
 
