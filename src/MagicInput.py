@@ -144,6 +144,7 @@ class MagicInput(object):
 
                     # parentheses
                     if c == "(":
+                        is_dot_used = False
                         is_sign_used = is_op_used = False
                         l += 1
                         is_opened = True
