@@ -188,11 +188,9 @@ class MagicInput(object):
         terms = []
         ops = []
 
-        i, t = 0, 0
         is_sign_used = False
         tmp_str = ""
 
-        x = 0
         for x, c in enumerate(expr):
             if c in OPS:
                 left = not(x != 0 and expr[x-1].isnumeric())
@@ -204,14 +202,29 @@ class MagicInput(object):
                     ops.append(c)
                     terms.append(tmp_str)
 
-                    t += 1
                     tmp_str = ""
                     is_sign_used = False
             else:
                 tmp_str = tmp_str + c
+
         terms.append(tmp_str)
 
         # print(terms)
         # print(ops)
 
         return (terms, ops)
+
+    @staticmethod
+    def getTermsInTerm(expr):
+        terms = []
+        tmp_str = ""
+
+        for x, c in enumerate(expr):
+            if x!= 0 and c.isalpha() and expr[x-1].isnumeric():
+                terms.append(tmp_str)
+                tmp_str = c
+            else:
+                tmp_str = tmp_str + c
+        terms.append(tmp_str)
+
+        return terms

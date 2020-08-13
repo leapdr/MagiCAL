@@ -139,34 +139,41 @@ class MagicMath(object):
             return result
         except ValueError:
             # has to be evaluated
-            result = 0
 
-            # get decimal value
-            p = re.compile(r"([\+\-]?\d*(\.\d+)?)")
-            d = list(filter(None, [m.group() for m in p.finditer(term)])).pop()
-            i = term.index(d)
+            interms = MagicInput.getTermsInTerm(term)
+            if len(interms) > 1:
+                result = 1
+                for interm in interms:
+                    result *= self.evaluateTerm(interm)
+                return result
+            else:
+                term = interms[0]
 
-            pfn = re.compile(r"|".join(FUNCS))
-            fns = list(filter(None, [m.group() for m in pfn.finditer(term)]))
-            f = float(d)
+                # get decimal value
+                p = re.compile(r"([\+\-]?\d*(\.\d+)?)")
+                d = list(filter(None, [m.group() for m in p.finditer(term)])).pop()
+                i = term.index(d)
 
-            # left
-            i = len(fns)-1
-            while i >= 0:
-                f = FUNC_EVAL[fns[i]](f)
-                i -= 1
-            result = f
+                pfn = re.compile(r"|".join(FUNCS))
+                fns = list(filter(None, [m.group() for m in pfn.finditer(term)]))
+                result = float(d)
 
-            # right
-            j = len(d)+i
-            while j < len(term):
-                if term[j] == "%":
-                    result /= 100
-                elif term[j] == "%":
-                    result = self.getFactorial(result)
-                j+=1
+                # right
+                j = len(d)+i
+                while j < len(term):
+                    if term[j] == "!":
+                        result = self.getFactorial(result)
+                    elif term[j] == "%":
+                        result /= 100
+                    j+=1
 
-            return result
+                # left
+                i = len(fns)-1
+                while i >= 0:
+                    result = FUNC_EVAL[fns[i]](result)
+                    i -= 1
+
+                return result
 
     def evaluate(self, input):
         # evaluate parentheses
