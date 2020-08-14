@@ -56,6 +56,9 @@ class MagicInput(object):
 
                     if is_alpha:
                         fn += p
+                    if p == "(":
+                        l += 1
+                        is_opened = True
 
                     # illegal start of expression
                     if is_op and not is_sign:

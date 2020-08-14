@@ -65,7 +65,7 @@ class MagicMath(object):
 
     def getFactorial(self, x):
         result = 1
-        while x != 0:
+        while x > 0:
             result *= x
             x -= 1
 
@@ -158,13 +158,11 @@ class MagicMath(object):
                 fns = list(filter(None, [m.group() for m in pfn.finditer(term)]))
                 result = float(d)
 
-                # right
+                # right factorial
                 j = len(d)+i
                 while j < len(term):
                     if term[j] == "!":
                         result = self.getFactorial(result)
-                    elif term[j] == "%":
-                        result /= 100
                     j+=1
 
                 # left
@@ -172,6 +170,13 @@ class MagicMath(object):
                 while i >= 0:
                     result = FUNC_EVAL[fns[i]](result)
                     i -= 1
+
+                # right percentage
+                j = len(d)+i
+                while j < len(term):
+                    if term[j] == "%":
+                        result /= 100
+                    j+=1
 
                 return result
 
@@ -193,16 +198,18 @@ class MagicMath(object):
             # replace parenthesis
             paren_converted = False
             char_l, char_r = "", ""
-            left = input[start-2]
             less_func = 0
 
-            if left.isnumeric():
-                char_l = "*"
-                paren_converted = True
-            elif left in FUNCS:
-                ans = self.evaluateTerm(f"{left}{ans}")
-                paren_converted = True
-                less_func += 1
+            if start > 1:
+                left = input[start-2]
+
+                if left.isnumeric():
+                    char_l = "*"
+                    paren_converted = True
+                elif left in FUNCS:
+                    ans = self.evaluateTerm(f"{left}{ans}")
+                    paren_converted = True
+                    less_func += 1
 
             percent_adjust = 0
             if end+1 < len(input):
@@ -211,9 +218,6 @@ class MagicMath(object):
                         char_r = "*"
                     else:
                         raise ParenthesisError
-                elif input[end+1] == "%":
-                    ans = self.evaluateTerm(f"{ans}%")
-                    percent_adjust = 1
 
             # restructure input
             input = input[0:start-1-less_func] + char_l + str(ans) + char_r + input[end+1+percent_adjust:]
@@ -251,6 +255,7 @@ class MagicMath(object):
                     break
 
         # evaluate term
+        print(terms)
         result = self.evaluateTerm(terms[0])
 
         if result % 1 == 0:
