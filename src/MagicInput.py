@@ -28,10 +28,11 @@ class MagicInput(object):
         input = self.input
 
         try:
-            l = 0
+            al = l = 0
 
             # init flags
             is_opened = False
+            is_al_opened = False
             is_op = False
             is_sign = False
             is_dot = False
@@ -159,14 +160,25 @@ class MagicInput(object):
                     else:
                         is_opened = False
 
+                    # absolute value
+                    x = 0
+                    if c == "|":
+                        if p == "|":
+                            raise AbsoluteValueError
+                        if not is_al_opened:
+                            is_sign_used = is_op_used = False
+                        
+                        is_al_opened = not is_al_opened
+                        al += 1 if is_al_opened else -1
+
                     # mismatch right, terminate loop
-                    if l < 0:
+                    if l < 0 or al < 0:
                         raise ParenthesisError
 
                     p = c
 
             # mismatch left, end of string
-            if l > 0:
+            if l > 0 or al < 0:
                 raise ParenthesisError
             if is_op_used or is_sign_used:
                 raise OperatorError(3)

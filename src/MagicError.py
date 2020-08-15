@@ -23,6 +23,10 @@ class OperatorError(Error):
     
 class ParenthesisError(Error): 
     pass 
+
+class AbsoluteValueError(Error):
+    pass
+
 class PercentSignError(Error):
     pass
 
