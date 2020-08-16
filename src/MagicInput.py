@@ -12,6 +12,8 @@ SIGNS = ["+", "-"]
 OPS = ["*", "/", "+", "-", "m"]
 FUNCS2 = ["a", "s", "S", "c", "C", "t", "T", "l", "L"]
 FUNCS = ["abs", "sin", "sinh", "cos", "cosh", "tan", "tanh", "ln", "log"]
+OPEN_GROUP = ["(", "[", "|"]
+CLOSE_GROUP = [")", "]", "|"] 
 
 class MagicInput(object):
     def __init__(self, input):
@@ -29,6 +31,7 @@ class MagicInput(object):
 
         try:
             al = l = 0
+            groups = dict.fromkeys(OPEN_GROUP, 0)
 
             # init flags
             is_opened = False
@@ -146,34 +149,54 @@ class MagicInput(object):
 
                         is_dot_used = False
 
-                    # parentheses
-                    if c == "(":
+                    # groups
+                    if c in OPEN_GROUP:
+                        if (c == "[" and (p.isnumeric() or p == "|")) or (c == "|" and (p.isnumeric() or p == "]")):
+                            raise ParenthesisError
+
                         is_dot_used = False
                         is_sign_used = is_op_used = False
-                        l += 1
-                        is_opened = True
-                    elif c == ")":
-                        # ()
-                        if is_opened:
+
+                        groups[c] += 1
+                    elif c in CLOSE_GROUP:
+                        if p in OPEN_GROUP and c != "|":
                             raise ParenthesisError
-                        l -= 1
-                    else:
-                        is_opened = False
+
+                        groups[c] -= 1
+
+                    if groups[c] < 0:
+                        raise ParenthesisError
+
+
+
+                    # parentheses
+                    # if c == "(":
+                    #     is_dot_used = False
+                    #     is_sign_used = is_op_used = False
+                    #     l += 1
+                    #     is_opened = True
+                    # elif c == ")":
+                    #     # ()
+                    #     if is_opened:
+                    #         raise ParenthesisError
+                    #     l -= 1
+                    # else:
+                    #     is_opened = False
 
                     # absolute value
-                    x = 0
-                    if c == "|":
-                        if p == "|":
-                            raise AbsoluteValueError
-                        if not is_al_opened:
-                            is_sign_used = is_op_used = False
+                    # x = 0
+                    # if c == "|":
+                    #     if p == "|":
+                    #         raise AbsoluteValueError
+                    #     if not is_al_opened:
+                    #         is_sign_used = is_op_used = False
                         
-                        is_al_opened = not is_al_opened
-                        al += 1 if is_al_opened else -1
+                    #     is_al_opened = not is_al_opened
+                    #     al += 1 if is_al_opened else -1
 
                     # mismatch right, terminate loop
-                    if l < 0 or al < 0:
-                        raise ParenthesisError
+                    # if l < 0 or al < 0:
+                    #     raise ParenthesisError
 
                     p = c
 
