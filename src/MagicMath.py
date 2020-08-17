@@ -274,6 +274,8 @@ class MagicMath(object):
 
         error = m_input.validate()
 
+        sys.exit()
+
         if error == "":
             # initialize precedence for EMDAS
             self.precedence = {

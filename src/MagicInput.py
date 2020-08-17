@@ -35,7 +35,7 @@ class MagicInput(object):
 
             # init flags
             is_opened = False
-            is_al_opened = False
+            is_abs_opened = False
             is_op = False
             is_sign = False
             is_dot = False
@@ -150,21 +150,27 @@ class MagicInput(object):
                         is_dot_used = False
 
                     # groups
-                    if c in OPEN_GROUP:
-                        if (c == "[" and (p.isnumeric() or p == "|")) or (c == "|" and (p.isnumeric() or p == "]")):
+                    if c in OPEN_GROUP or (c == "|" and not is_abs_opened):
+                        if (c == "[" or c == "|") and (p.isnumeric() or p in CLOSE_GROUP):
                             raise ParenthesisError
+
+                        if c == "|":
+                            is_abs_opened = True
 
                         is_dot_used = False
                         is_sign_used = is_op_used = False
 
                         groups[c] += 1
-                    elif c in CLOSE_GROUP:
+                    elif c in CLOSE_GROUP or (c == "|" and is_abs_opened):
                         if p in OPEN_GROUP and c != "|":
                             raise ParenthesisError
 
+                        if c == "|":
+                            is_abs_opened = False
+
                         groups[c] -= 1
 
-                    if groups[c] < 0:
+                    if c in OPEN_GROUP and groups[c] < 0:
                         raise ParenthesisError
 
 
