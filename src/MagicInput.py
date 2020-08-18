@@ -1,5 +1,6 @@
 
 import re
+import sys
 
 from MagicError import *
 
@@ -13,7 +14,8 @@ OPS = ["*", "/", "+", "-", "m"]
 FUNCS2 = ["a", "s", "S", "c", "C", "t", "T", "l", "L"]
 FUNCS = ["abs", "sin", "sinh", "cos", "cosh", "tan", "tanh", "ln", "log"]
 OPEN_GROUP = ["(", "[", "|"]
-CLOSE_GROUP = [")", "]", "|"] 
+CLOSE_GROUP = [")", "]", "|"]
+GROUP_PAIR = {")": "(", "]": "[", "|": "|", "[": "]", "(": ")"}
 
 class MagicInput(object):
     def __init__(self, input):
@@ -50,6 +52,8 @@ class MagicInput(object):
             fn = p = ""
             f = 0
             for i, c in enumerate(input):
+                # print(f"{p} - {c}")
+
                 if p == "":
                     p = c
 
@@ -63,6 +67,14 @@ class MagicInput(object):
                     if p == "(":
                         l += 1
                         is_opened = True
+
+                    # parentheses
+                    if c in OPEN_GROUP:
+                        if c == "|":
+                            is_abs_opened = True
+
+                        groups[c] += 1
+
 
                     # illegal start of expression
                     if is_op and not is_sign:
@@ -168,7 +180,7 @@ class MagicInput(object):
                         if c == "|":
                             is_abs_opened = False
 
-                        groups[c] -= 1
+                        groups[GROUP_PAIR[c]] -= 1
 
                     if c in OPEN_GROUP and groups[c] < 0:
                         raise ParenthesisError
@@ -205,10 +217,15 @@ class MagicInput(object):
                     #     raise ParenthesisError
 
                     p = c
+            
+            # End of for loop
 
-            # mismatch left, end of string
-            if l > 0 or al < 0:
-                raise ParenthesisError
+            # mismatch left
+            for c, v in enumerate(groups):
+                if v != 0:
+                    raise ParenthesisError
+
+            # illegal end of expression
             if is_op_used or is_sign_used:
                 raise OperatorError(3)
 
