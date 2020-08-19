@@ -217,7 +217,7 @@ class MagicMath(object):
                     if not(paren_converted):
                         char_r = "*"
                     else:
-                        raise ParenthesisError
+                        raise ParenthesisError(5)
 
             # restructure input
             input = input[0:start-1-less_func] + char_l + str(ans) + char_r + input[end+1+percent_adjust:]
@@ -296,8 +296,8 @@ class MagicMath(object):
 
                 # display answer
                 self.display(self.answer)
-            except ParenthesisError:
-                self.display("Malformed Expression")
+            except ParenthesisError as e:
+                self.display(e)
             except ZeroDivisionError:
                 self.display("Division by Zero")
 

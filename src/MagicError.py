@@ -21,8 +21,26 @@ class OperatorError(Error):
     def __str__(self):
         return self.message
     
-class ParenthesisError(Error): 
-    pass 
+class ParenthesisError(Error):
+    def __init__(self, error_type, error_message = ""):
+        base_message = "Group Error: "
+        if(error_type == 0):
+            type_message = "Illegal end of term"
+        if(error_type == 1):
+            type_message = "Malformed groupings"
+        if(error_type == 2):
+            type_message = "Missing Term in group"
+        if(error_type == 3):
+            type_message = "Mismatch group sign"
+        if(error_type == 4):
+            type_message = "Unclosed or unopened group"
+        if(error_type == 5):
+            type_message = "Missing group operation"
+
+        self.message = base_message + type_message + error_message
+
+    def __str__(self):
+        return self.message
 
 class AbsoluteValueError(Error):
     pass

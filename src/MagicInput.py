@@ -114,7 +114,7 @@ class MagicInput(object):
                         if p == "%":
                             raise PercentSignError
                         elif p == ")":
-                            raise ParenthesisError
+                            raise ParenthesisError(0)
                         elif p == ".":
                             raise DecimalError
                         is_op_used = False
@@ -164,7 +164,7 @@ class MagicInput(object):
                     # groups
                     if c in OPEN_GROUP or (c == "|" and not is_abs_opened):
                         if (c == "[" or c == "|") and (p.isnumeric() or p in CLOSE_GROUP):
-                            raise ParenthesisError
+                            raise ParenthesisError(1)
 
                         if c == "|":
                             is_abs_opened = True
@@ -175,7 +175,7 @@ class MagicInput(object):
                         groups[c] += 1
                     elif c in CLOSE_GROUP or (c == "|" and is_abs_opened):
                         if p in OPEN_GROUP and c != "|":
-                            raise ParenthesisError
+                            raise ParenthesisError(2)
 
                         if c == "|":
                             is_abs_opened = False
@@ -183,7 +183,7 @@ class MagicInput(object):
                         groups[GROUP_PAIR[c]] -= 1
 
                     if c in OPEN_GROUP and groups[c] < 0:
-                        raise ParenthesisError
+                        raise ParenthesisError(3)
 
 
 
@@ -221,9 +221,9 @@ class MagicInput(object):
             # End of for loop
 
             # mismatch left
-            for c, v in enumerate(groups):
+            for c, v in groups.items():
                 if v != 0:
-                    raise ParenthesisError
+                    raise ParenthesisError(4)
 
             # illegal end of expression
             if is_op_used or is_sign_used:
@@ -242,8 +242,8 @@ class MagicInput(object):
             return "Unrecognized Character in Expression"
         except UnrecognizedFunction:
             return "Unrecognized Function or Operation"
-        except ParenthesisError:
-            return "Malformed Expression"
+        except ParenthesisError as e:
+            return str(e)
     
     @staticmethod
     def getTermsAndOps(expr):
