@@ -109,34 +109,46 @@ class MagicMath(object):
         start_found = False
         end_found = False
         start_extra = 0
+        match = ""
+        is_abs_opened = False
 
-        while i < len(input) or not(start_found and end_found):
-            if input[i] == "(" :
-                if not(start_found):
-                    start = i
-                    start_found = True
-                else:
-                    start_extra += 1
+        while i < len(input) and not end_found:
+            if input[i] in OPEN_GROUP and match == "":
+                match = input[i]
+                is_abs = match == "|"
+            
+            if match != "": 
+                if input[i] == match and not(is_abs_opened):
+                    if not(start_found):
+                        start = i
+                        start_found = True
+                    else:
+                        start_extra += 1
 
-            if input[i] == ")":
-                if start_extra > 0:
-                    start_extra -= 1
-                else:
-                    if not(end_found):
-                        end = i
-                        end_found = True
+                    if match == "|":
+                        is_abs_opened = True
+                        i += 1
+                        continue
+
+                if input[i] == GROUP_PAIR[match]:
+                    if start_extra > 0:
+                        start_extra -= 1
+                    else:
+                        if not(end_found):
+                            end = i
+                            end_found = True
 
             i += 1
 
-        return (start, end)
+        return (start, end, is_abs_opened)
 
-    def evaluateTerm(self, term):
+    def evaluateTerm(self, term, is_abs = False):
         term = str(term)
 
         try:
             # no need term evaluation
             result = float(term)
-            return result
+            return result if not is_abs else abs(result)
         except ValueError:
             # has to be evaluated
 
@@ -178,25 +190,24 @@ class MagicMath(object):
                         result /= 100
                     j+=1
 
-                return result
+                return result if not is_abs else abs(result)
 
-    def evaluate(self, input):
+    def evaluate(self, input, is_abs = False):
         # evaluate group
-        paren_count = input.count('(')
-
-        while paren_count > 0:
-            # get expression inside parenthesis then evaluate
+        group_count = sum([input.count(i) if i != "|" else input.count(i) / 2 for i in OPEN_GROUP])
+        while group_count > 0:
             indices = self.getIndicesMatchingParen(input)
             start = indices[0] + 1
             end = indices[1]
+            is_expr_abs = indices[2]
 
             exp = input[start:end]
 
-            paren_count -= exp.count('(')
-            ans = self.evaluate(exp)
+            group_count -= sum([exp.count(i) if i != "|" else exp.count(i) / 2 for i in OPEN_GROUP])
+            ans = self.evaluate(exp, is_expr_abs)
 
-            # replace parenthesis
-            paren_converted = False
+            # replace grouping characters
+            group_converted = False
             char_l, char_r = "", ""
             less_func = 0
 
@@ -205,16 +216,16 @@ class MagicMath(object):
 
                 if left.isnumeric():
                     char_l = "*"
-                    paren_converted = True
+                    group_converted = True
                 elif left in FUNCS:
                     ans = self.evaluateTerm(f"{left}{ans}")
-                    paren_converted = True
+                    group_converted = True
                     less_func += 1
 
             percent_adjust = 0
             if end+1 < len(input):
                 if input[end+1].isnumeric():
-                    if not(paren_converted):
+                    if not(group_converted):
                         char_r = "*"
                     else:
                         raise ParenthesisError(5)
@@ -222,7 +233,7 @@ class MagicMath(object):
             # restructure input
             input = input[0:start-1-less_func] + char_l + str(ans) + char_r + input[end+1+percent_adjust:]
 
-            paren_count -= 1
+            group_count -= 1
 
         # set the terms and operators
         parts = MagicInput.getTermsAndOps(input)
@@ -255,8 +266,7 @@ class MagicMath(object):
                     break
 
         # evaluate term
-        print(terms)
-        result = self.evaluateTerm(terms[0])
+        result = self.evaluateTerm(terms[0], is_abs)
 
         if result % 1 == 0:
             result = int(result)

@@ -52,8 +52,6 @@ class MagicInput(object):
             fn = p = ""
             f = 0
             for i, c in enumerate(input):
-                # print(f"{p} - {c}")
-
                 if p == "":
                     p = c
 
@@ -184,7 +182,6 @@ class MagicInput(object):
             # End of for loop
 
             # mismatch left
-            print(groups)
             for c, v in groups.items():
                 if v != 0:
                     raise ParenthesisError(4)
