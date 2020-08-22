@@ -181,7 +181,7 @@ class MagicMath(object):
                 return result
 
     def evaluate(self, input):
-        # evaluate parentheses
+        # evaluate group
         paren_count = input.count('(')
 
         while paren_count > 0:

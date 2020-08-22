@@ -4,6 +4,15 @@ sys.path.insert(1, "./src")
 
 from MagicMath import *
 
+# Execute arguments
+if len(sys.argv) > 1:
+    expr = sys.argv[1]
+    
+    math = MagicMath("cli", expr)
+    math.parse()
+    sys.exit()
+
+# Enter CLI
 intro_message = """
 Welcome to MagiCAL CLI
 by Aaron Basco

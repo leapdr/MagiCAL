@@ -162,65 +162,29 @@ class MagicInput(object):
                         is_dot_used = False
 
                     # groups
-                    if c in OPEN_GROUP or (c == "|" and not is_abs_opened):
-                        if (c == "[" or c == "|") and (p.isnumeric() or p in CLOSE_GROUP):
+                    if c in OPEN_GROUP and not (c == "|" and groups[c] == 1):
+                        if (c == "[" or (c == "|" and groups[c] == 0)) and (p.isnumeric() or p in CLOSE_GROUP):
                             raise ParenthesisError(1)
-
-                        if c == "|":
-                            is_abs_opened = True
 
                         is_dot_used = False
                         is_sign_used = is_op_used = False
 
                         groups[c] += 1
-                    elif c in CLOSE_GROUP or (c == "|" and is_abs_opened):
+                    elif c in CLOSE_GROUP:
                         if p in OPEN_GROUP and c != "|":
                             raise ParenthesisError(2)
-
-                        if c == "|":
-                            is_abs_opened = False
 
                         groups[GROUP_PAIR[c]] -= 1
 
                     if c in OPEN_GROUP and groups[c] < 0:
                         raise ParenthesisError(3)
 
-
-
-                    # parentheses
-                    # if c == "(":
-                    #     is_dot_used = False
-                    #     is_sign_used = is_op_used = False
-                    #     l += 1
-                    #     is_opened = True
-                    # elif c == ")":
-                    #     # ()
-                    #     if is_opened:
-                    #         raise ParenthesisError
-                    #     l -= 1
-                    # else:
-                    #     is_opened = False
-
-                    # absolute value
-                    # x = 0
-                    # if c == "|":
-                    #     if p == "|":
-                    #         raise AbsoluteValueError
-                    #     if not is_al_opened:
-                    #         is_sign_used = is_op_used = False
-                        
-                    #     is_al_opened = not is_al_opened
-                    #     al += 1 if is_al_opened else -1
-
-                    # mismatch right, terminate loop
-                    # if l < 0 or al < 0:
-                    #     raise ParenthesisError
-
                     p = c
             
             # End of for loop
 
             # mismatch left
+            print(groups)
             for c, v in groups.items():
                 if v != 0:
                     raise ParenthesisError(4)

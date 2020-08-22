@@ -6,7 +6,8 @@ class DecimalError(Error):
 class OperatorError(Error):
     message = ""
 
-    def __init__(self, error_type, error_message = "Operator Error: "):
+    def __init__(self, error_type, error_message = ""):
+        base_message = f"Operator Error: ({error_type})"
         if(error_type == 0):
             type_message = "Function and sign association"
         elif(error_type == 1):
@@ -16,14 +17,14 @@ class OperatorError(Error):
         elif(error_type == 3):
             type_message = "Missing term"
 
-        self.message = error_message + type_message
+        self.message = base_message + type_message + error_message
 
     def __str__(self):
         return self.message
     
 class ParenthesisError(Error):
     def __init__(self, error_type, error_message = ""):
-        base_message = "Group Error: "
+        base_message = f"Group Error ({error_type}): "
         if(error_type == 0):
             type_message = "Illegal end of term"
         if(error_type == 1):
@@ -56,7 +57,7 @@ class UnrecognizedCharacter(Error):
 
 class InputError(Error):
     def __init__(self, error_type, error_message = ""):
-        base_message = "Input Error: "
+        base_message = f"Input Error ({error_type}): "
         if(error_type == 0):
             type_message = "Integer required"
         if(error_type == 1):
