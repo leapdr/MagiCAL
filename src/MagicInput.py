@@ -171,6 +171,13 @@ class MagicInput(object):
                     elif c in CLOSE_GROUP and not(c == "|" and groups[c] != 1):
                         if p in OPEN_GROUP and c == "|":
                             raise ParenthesisError(2)
+                        elif p.isalpha():
+                            raise ParenthesisError(0)
+                        elif p == ".":
+                            raise DecimalError
+                        elif c != ")" and n != "" and n.isnumeric():
+                            print(f"{p} {c} {n}")
+                            raise ParenthesisError(5)
 
                         groups[GROUP_PAIR[c]] -= 1
 
