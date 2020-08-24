@@ -168,8 +168,8 @@ class MagicInput(object):
                         is_sign_used = is_op_used = False
 
                         groups[c] += 1
-                    elif c in CLOSE_GROUP:
-                        if p in OPEN_GROUP and c != "|":
+                    elif c in CLOSE_GROUP and not(c == "|" and groups[c] != 1):
+                        if p in OPEN_GROUP and c == "|":
                             raise ParenthesisError(2)
 
                         groups[GROUP_PAIR[c]] -= 1
