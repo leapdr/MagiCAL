@@ -111,7 +111,7 @@ class MagicInput(object):
 
                         if p == "%":
                             raise PercentSignError
-                        elif p == ")":
+                        elif p in CLOSE_GROUP and not (p == "|" and groups["|"] == 1):
                             raise ParenthesisError(0)
                         elif p == ".":
                             raise DecimalError
@@ -163,6 +163,8 @@ class MagicInput(object):
                     if c in OPEN_GROUP and not (c == "|" and groups[c] == 1):
                         if (c == "[" or (c == "|" and groups[c] == 0)) and (p.isnumeric() or p in CLOSE_GROUP):
                             raise ParenthesisError(1)
+                        elif p == "%" or p == "!":
+                            raise ParenthesisError(5)
 
                         is_dot_used = False
                         is_sign_used = is_op_used = False
@@ -176,7 +178,6 @@ class MagicInput(object):
                         elif p == ".":
                             raise DecimalError
                         elif c != ")" and n != "" and n.isnumeric():
-                            print(f"{p} {c} {n}")
                             raise ParenthesisError(5)
 
                         groups[GROUP_PAIR[c]] -= 1
