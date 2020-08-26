@@ -6,19 +6,25 @@ from math import *
 from MagicError import *
 from MagicInput import *
 
-ANGLE_DEFAULT = lambda x: radians(x)
+DEG = lambda x: degrees(x)
+RAD = lambda x: radians(x)
+
+ANGLE_DEFAULT = RAD
 
 FUNC_EVAL = {
-    "asin": lambda x: asin(ANGLE_DEFAULT(x)),
-    "sin": lambda x: sin(ANGLE_DEFAULT(x)),
-    "sinh": lambda x: sinh(ANGLE_DEFAULT(x)),
-    "acos": lambda x: acos(ANGLE_DEFAULT(x)),
+    "abs": lambda x: abs(x),
+    "acos": lambda x: DEG(acos(x)),
+    "acosh": lambda x: acosh(x),
+    "asin": lambda x: DEG(asin(x)),
+    "asinh": lambda x: asinh(x),
+    "atan": lambda x: DEG(atan(x)),
+    "atanh": lambda x: atanh(x),
     "cos": lambda x: cos(ANGLE_DEFAULT(x)),
     "cosh": lambda x: cosh(ANGLE_DEFAULT(x)),
-    "atan": lambda x: tan(ANGLE_DEFAULT(x)),
+    "sin": lambda x: sin(ANGLE_DEFAULT(x)),
+    "sinh": lambda x: sinh(ANGLE_DEFAULT(x)),
     "tan": lambda x: tan(ANGLE_DEFAULT(x)),
     "tanh": lambda x: tanh(ANGLE_DEFAULT(x)),
-    "abs": lambda x: abs(x),
 }
 
 class MagicMath(object):
@@ -171,6 +177,7 @@ class MagicMath(object):
 
                 pfn = re.compile(r"|".join(FUNCS))
                 fns = list(filter(None, [m.group() for m in pfn.finditer(term)]))
+                print(fns)
                 result = float(d)
 
                 # right factorial
@@ -183,6 +190,7 @@ class MagicMath(object):
                 # left
                 i = len(fns)-1
                 while i >= 0:
+                    print(fns[i])
                     result = FUNC_EVAL[fns[i]](result)
                     i -= 1
 
