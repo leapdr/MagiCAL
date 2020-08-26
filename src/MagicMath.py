@@ -9,10 +9,13 @@ from MagicInput import *
 ANGLE_DEFAULT = lambda x: radians(x)
 
 FUNC_EVAL = {
+    "asin": lambda x: asin(ANGLE_DEFAULT(x)),
     "sin": lambda x: sin(ANGLE_DEFAULT(x)),
     "sinh": lambda x: sinh(ANGLE_DEFAULT(x)),
+    "acos": lambda x: acos(ANGLE_DEFAULT(x)),
     "cos": lambda x: cos(ANGLE_DEFAULT(x)),
     "cosh": lambda x: cosh(ANGLE_DEFAULT(x)),
+    "atan": lambda x: tan(ANGLE_DEFAULT(x)),
     "tan": lambda x: tan(ANGLE_DEFAULT(x)),
     "tanh": lambda x: tanh(ANGLE_DEFAULT(x)),
     "abs": lambda x: abs(x),
