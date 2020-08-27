@@ -45,6 +45,16 @@ class ParenthesisError(Error):
 
 class AbsoluteValueError(Error):
     pass
+class ConstantError(Error):
+    def __init__(self, error_type, error_message = ""):
+        base_message = f"Constant Error ({error_type}): "
+        if(error_type == 0):
+            type_message = "Misplaced constant"
+
+        self.message = base_message + type_message + error_message
+
+    def __str__(self):
+        return self.message
 
 class PercentSignError(Error):
     pass

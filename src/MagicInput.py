@@ -103,11 +103,13 @@ class MagicInput(object):
                             raise UnrecognizedCharacter
                         elif p == "%":
                             raise PercentSignError
+                        elif p in CONST:
+                            raise ConstantError(0)
                         fn = ""
                         is_sign_used = is_op_used = False
 
                     # constant
-                    if c in CONST:
+                    elif c in CONST:
                         if p == ".":
                             raise DecimalError
                         elif p in CLOSE_GROUP and not (p == "|" and groups["|"] == 1):
@@ -116,7 +118,8 @@ class MagicInput(object):
                             raise PercentSignError
                         elif p == "!":
                             raise FactorialSignError
-
+                        elif p in CONST:
+                            raise ConstantError(0)
 
                     # function, alphabet
                     elif is_alpha:
@@ -138,7 +141,7 @@ class MagicInput(object):
                         if is_dot_used or p == ".":
                             raise DecimalError
 
-                        if n == "":
+                        if n == "" or (p in CONST and fn not in FUNCS):
                             raise DecimalError
                         
                         is_dot_used = True
@@ -192,6 +195,8 @@ class MagicInput(object):
                             raise DecimalError
                         elif c != ")" and n != "" and n.isnumeric():
                             raise ParenthesisError(5)
+                        elif p in CONST:
+                            raise ConstantError(0)
 
                         groups[GROUP_PAIR[c]] -= 1
 
@@ -217,6 +222,8 @@ class MagicInput(object):
         except OperatorError as e:
             return str(e)
         except InputError as e:
+            return str(e)
+        except ConstantError as e:
             return str(e)
         except PercentSignError:
             return "Misplaced Percentage"
