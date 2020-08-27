@@ -67,3 +67,14 @@ class InputError(Error):
 
     def __str__(self):
         return self.message
+
+class OutputError(Error):
+    def __init__(self, error_type, error_message = ""):
+        base_message = f"Output Error ({error_type}): "
+        if(error_type == 0):
+            type_message = "Undefined for values outside [-1, 1]"
+
+        self.message = base_message + type_message + error_message
+
+    def __str__(self):
+        return self.message

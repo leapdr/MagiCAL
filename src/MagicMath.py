@@ -177,7 +177,6 @@ class MagicMath(object):
 
                 pfn = re.compile(r"|".join(FUNCS))
                 fns = list(filter(None, [m.group() for m in pfn.finditer(term)]))
-                print(fns)
                 result = float(d)
 
                 # right factorial
@@ -190,7 +189,9 @@ class MagicMath(object):
                 # left
                 i = len(fns)-1
                 while i >= 0:
-                    print(fns[i])
+                    if fns[i] in ["acos", "asin"] and (result < -1 or result > 1):
+                        raise OutputError(0)
+                    
                     result = FUNC_EVAL[fns[i]](result)
                     i -= 1
 
@@ -321,6 +322,8 @@ class MagicMath(object):
                 self.display(e)
             except ZeroDivisionError:
                 self.display("Division by Zero")
+            except OutputError as e:
+                self.display(e)
 
         else:
             self.display(f"{m_input.input}: {error}")
