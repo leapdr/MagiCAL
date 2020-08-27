@@ -49,6 +49,9 @@ class AbsoluteValueError(Error):
 class PercentSignError(Error):
     pass
 
+class FactorialSignError(Error):
+    pass
+
 class UnrecognizedFunction(Error):
     pass
 

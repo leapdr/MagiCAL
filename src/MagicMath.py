@@ -6,6 +6,9 @@ from math import *
 from MagicError import *
 from MagicInput import *
 
+PI = pi
+E = e
+
 DEG = lambda x: degrees(x)
 RAD = lambda x: radians(x)
 

@@ -9,6 +9,7 @@ TOSYMBOL = {
     "/": "÷"
 }
 
+CONST = ["π", "e"]
 SIGNS = ["+", "-"]
 OPS = ["*", "/", "+", "-", "m"]
 FUNCS2 = ["a", "s", "S", "c", "C", "t", "T", "l", "L"]
@@ -104,6 +105,18 @@ class MagicInput(object):
                             raise PercentSignError
                         fn = ""
                         is_sign_used = is_op_used = False
+
+                    # constant
+                    if c in CONST:
+                        if p == ".":
+                            raise DecimalError
+                        elif p in CLOSE_GROUP and not (p == "|" and groups["|"] == 1):
+                            raise ParenthesisError(0)
+                        elif p == "%":
+                            raise PercentSignError
+                        elif p == "!":
+                            raise FactorialSignError
+
 
                     # function, alphabet
                     elif is_alpha:
@@ -207,6 +220,8 @@ class MagicInput(object):
             return str(e)
         except PercentSignError:
             return "Misplaced Percentage"
+        except FactorialSignError:
+            return "Misplaced Factorial"
         except UnrecognizedCharacter:
             return "Unrecognized Character in Expression"
         except UnrecognizedFunction:
