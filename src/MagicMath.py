@@ -245,6 +245,10 @@ class MagicMath(object):
                     else:
                         raise ParenthesisError(5)
 
+            # round
+            if input[start-1] == "[":
+                ans = round(float(ans))
+
             # restructure input
             input = input[0:start-1-less_func] + char_l + str(ans) + char_r + input[end+1+percent_adjust:]
 
