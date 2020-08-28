@@ -9,6 +9,11 @@ from MagicInput import *
 PI = pi
 E = e
 
+CONST_VAL = {
+    "π": PI,
+    "e": E
+}
+
 DEG = lambda x: degrees(x)
 RAD = lambda x: radians(x)
 
@@ -172,6 +177,10 @@ class MagicMath(object):
                 return result
             else:
                 term = interms[0]
+
+                # is term constant
+                if term in CONST:
+                    return CONST_VAL[term]
 
                 # get decimal value
                 p = re.compile(r"([\+\-]?\d*(\.\d+)?)")

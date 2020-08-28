@@ -118,8 +118,6 @@ class MagicInput(object):
                             raise PercentSignError
                         elif p == "!":
                             raise FactorialSignError
-                        elif p in CONST:
-                            raise ConstantError(0)
 
                     # function, alphabet
                     elif is_alpha:
@@ -273,7 +271,7 @@ class MagicInput(object):
         tmp_str = ""
 
         for x, c in enumerate(expr):
-            if x!= 0 and c.isalpha() and expr[x-1].isnumeric():
+            if x!= 0 and c.isalpha() and (expr[x-1].isnumeric() or expr[x-1] in CONST):
                 terms.append(tmp_str)
                 tmp_str = c
             else:
