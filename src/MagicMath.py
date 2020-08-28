@@ -11,7 +11,7 @@ E = e
 
 CONST_VAL = {
     "π": PI,
-    "e": E
+    "𝑒": E
 }
 
 DEG = lambda x: degrees(x)
