@@ -43,226 +43,72 @@ def eval():
 # get button background image
 button_bg = PhotoImage(file = r"res/btn_bg.png")
 
-buttons = [i for i in range(10)]
+buttons = [i for i in range(10)] + [".", "%"] + [
+    "÷", " mod ", "sin ", "cos ", "tan ", 
+    "×", "|x|", "sinh", "cosh ", "tanh ",
+    "-", "C", "(", ")", "",
+    "+", "=", "a×b", "", ""
+]
+
 row_fix = 2
-for i in buttons:
-    # lambda i=i to create different functions
-    buttons[i] = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text=i,
-        image=button_bg,
-        command=lambda i=i: encode(i))
+for x, i in enumerate(buttons):
+    # for numbers
+    if str(i).isnumeric():
+        # lambda i=i to create different functions
+        buttons[i] = Button(root,
+            bd=0, bg="#ECECEC",
+            borderwidth=0,
+            highlightthickness=0,
+            compound=CENTER,
+            padx=0, pady=0,
+            text=i,
+            image=button_bg,
+            command=lambda i=i: encode(i))
 
-    if(i == 0):
-        row = 4
-        col = 0
+        if(i == 0):
+            row = 4
+            col = 0
+        else:
+            # fix rows for (7 8 9)-first arrangement
+            row = int((i-1)/3+1) 
+            col = (i-1)%3
+
+        buttons[i].grid(row=row, column=col, padx=(5,0), pady=(5,0))
+    # for symbols
     else:
-        # fix rows for (7 8 9)-first arrangement
-        row = int((i-1)/3+1) 
-        col = (i-1)%3
+        if i == "":
+            pass
+        else:
+            if i == ".":
+                row = 4
+                col = 1
+            elif i == "%":
+                row = 4
+                col = 2
+            else:
+                row = int((x-12)/5+1)
+                col = (x-12)%5+3
 
-    buttons[i].grid(row=row, column=col, padx=(5,0), pady=(5,0))
+            fn = ""
+            if i == "=":
+                fn = eval
+            elif i == "C":
+                fn = clear
+            elif i == "a×b":
+                fn = factorizeInput
 
-# create dot button
-button_dot = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text=".",
-        image=button_bg,
-        command=lambda: encode(".")).grid(row=4, column=1, padx=(5,0), pady=5)
+            buttons[x] = Button(root,
+                bd=0, bg="#ECECEC",
+                borderwidth=0,
+                highlightthickness=0,
+                compound=CENTER,
+                padx=0, pady=0,
+                text=i,
+                image=button_bg,
+                command=fn if fn else lambda i=i: encode(i)
+            )
 
-# create operation buttons
-button_add = Button(root, 
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="+",
-        image=button_bg,
-        command=lambda: encode("+")).grid(row=4, column=3, padx=(5,0), pady=(5,0))
-
-button_sub = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="-",
-        image=button_bg,
-        command=lambda: encode("-")).grid(row=3, column=3, padx=(5,0), pady=(5,0))
-
-button_mul = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="×",
-        image=button_bg,
-        command=lambda: encode("×")).grid(row=2, column=3, padx=(5,0), pady=(5,0))
-
-button_div = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="÷",
-        image=button_bg,
-        command=lambda: encode("÷")).grid(row=1, column=3, padx=(5,0), pady=(5,0))
-
-# create equal button
-button_equal = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="=",
-        image=button_bg,command=eval).grid(row=4, column=4, padx=(5,0), pady=(5,0))
-
-# create clear button
-button_clear = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="C",
-        image=button_bg,
-        command=clear).grid(row=3, column=4, padx=(5,0), pady=(5,0))
-
-# create parenthesis buttons
-button_open_paren = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="(",
-        image=button_bg,
-        command=lambda: encode("(")).grid(row=3, column=5, padx=(5,0), pady=(5,0))
-
-button_close_paren = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text=")",
-        image=button_bg,
-        command=lambda: encode(")")).grid(row=3, column=6, padx=(5,0), pady=(5,0))
-
-button_abs = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="|x|",
-        image=button_bg,
-        command=lambda: encode("|")).grid(row=2, column=4, padx=(5,0), pady=(5,0))
-
-# create mod operator button
-button_mod = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="mod",
-        image=button_bg,
-        command=lambda: encode(" mod ")).grid(row=1, column=4, padx=(5,0), pady=(5,0))
-
-# create percent button
-button_percent = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="%",
-        image=button_bg,
-        command=lambda: encode("%")).grid(row=4, column=2, padx=(5,0), pady=(5,0))
-
-# create trigonometric function buttons
-button_sin = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="sin",
-        image=button_bg,
-        command=lambda: encode("sin ")).grid(row=1, column=5, padx=(5,0), pady=(5,0))
-
-button_sinh = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="sinh",
-        image=button_bg,
-        command=lambda: encode("sinh ")).grid(row=2, column=5, padx=(5,0), pady=(5,0))
-
-button_cos = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="cos",
-        image=button_bg,
-        command=lambda: encode("cos ")).grid(row=1, column=6, padx=(5,0), pady=(5,0))
-
-button_cosh = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="cosh",
-        image=button_bg,
-        command=lambda: encode("cosh ")).grid(row=2, column=6, padx=(5,0), pady=(5,0))
-
-button_tan = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="tan",
-        image=button_bg,
-        command=lambda: encode("tan ")).grid(row=1, column=7, padx=5, pady=(5,0))
-
-button_tanh = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="tanh",
-        image=button_bg,
-        command=lambda: encode("tanh ")).grid(row=2, column=7, padx=5, pady=(5,0))
-
-# create factorize button
-button_tanh = Button(root,
-        bd=0, bg="#ECECEC",
-        borderwidth=0,
-        highlightthickness=0,
-        compound=CENTER,
-        padx=0, pady=0,
-        text="axb",
-        image=button_bg,
-        command=factorizeInput).grid(row=4, column=5, padx=5, pady=(5,0))
+            buttons[x].grid(row=row, column=col, padx=(5,0), pady=(5,0))
 
 root.mainloop()
+sys.exit()
