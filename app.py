@@ -46,8 +46,8 @@ button_bg = PhotoImage(file = r"res/btn_bg.png")
 buttons = [i for i in range(10)] + [".", "%"] + [
     "÷", " mod ", "sin ", "cos ", "tan ", 
     "×", "|x|", "sinh", "cosh ", "tanh ",
-    "-", "C", "(", ")", "",
-    "+", "=", "a×b", "", ""
+    "-", "C", "a×b", "π", "ℯ",
+    "+", "=", "(", ")", ""
 ]
 
 row_fix = 2
@@ -105,7 +105,7 @@ for x, i in enumerate(buttons):
                 padx=0, pady=0,
                 text=i,
                 image=button_bg,
-                command=fn if fn else lambda i=i: encode(i)
+                command=fn if fn else lambda x=x: encode(i)
             )
 
             buttons[x].grid(row=row, column=col, padx=(5,0), pady=(5,0))
