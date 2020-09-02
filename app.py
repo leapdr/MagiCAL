@@ -47,7 +47,7 @@ buttons = [i for i in range(10)] + [".", "%"] + [
     "÷", " mod ", "sin ", "cos ", "tan ", 
     "×", "|x|", "sinh", "cosh ", "tanh ",
     "-", "C", "a×b", "π", "ℯ",
-    "+", "=", "(", ")", ""
+    "+", "=", "(", ")", "xⁿ"
 ]
 
 row_fix = 2
@@ -90,12 +90,15 @@ for x, i in enumerate(buttons):
                 col = (x-12)%5+3
 
             fn = ""
+            encode_text = i
             if i == "=":
                 fn = eval
             elif i == "C":
                 fn = clear
             elif i == "a×b":
                 fn = factorizeInput
+            elif i == "xⁿ":
+                encode_text = "^"
 
             buttons[x] = Button(root,
                 bd=0, bg="#ECECEC",
@@ -105,7 +108,7 @@ for x, i in enumerate(buttons):
                 padx=0, pady=0,
                 text=i,
                 image=button_bg,
-                command=fn if fn else lambda x=x: encode(i)
+                command=fn if fn else lambda x=x: encode(encode_text)
             )
 
             buttons[x].grid(row=row, column=col, padx=(5,0), pady=(5,0))
