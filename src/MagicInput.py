@@ -12,7 +12,6 @@ TOSYMBOL = {
 CONST = ["π", "ℯ"]
 SIGNS = ["+", "-"]
 OPS = ["*", "/", "+", "-", "m"]
-FUNCS2 = ["a", "s", "S", "c", "C", "t", "T", "l", "L"]
 FUNCS = ["abs", "asinh", "asin", "sinh", "sin", "acosh", "acos", "cosh", "cos", "atanh", "atan", "tanh", "tan", "ln", "log"]
 OPEN_GROUP = ["(", "[", "|"]
 CLOSE_GROUP = [")", "]", "|"]
@@ -49,6 +48,7 @@ class MagicInput(object):
             is_sign_used = False
             is_op_used = False
             is_dot_used = False
+            is_sqrt = False
 
             fn = p = ""
             f = 0
@@ -60,6 +60,7 @@ class MagicInput(object):
                     is_op = p in OPS
                     is_sign = p in SIGNS
                     is_alpha = p.isalpha()
+                    is_sqrt = p == "√"
 
                     if is_alpha:
                         fn += p
@@ -151,6 +152,10 @@ class MagicInput(object):
                         alp = p.isalpha()
                         if alp or p == "." or p in OPS:
                             raise PercentSignError
+
+                    # factorial
+
+                    # square root
 
                     # operators
                     elif is_op:
