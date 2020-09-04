@@ -81,6 +81,8 @@ class MagicInput(object):
                         raise OperatorError(1)
                     elif c == "%":
                         raise PercentSignError
+                    elif c == "!":
+                        raise FactorialSignError
                 else:
                     if c == " ":
                         if fn in FUNCS:
@@ -93,6 +95,8 @@ class MagicInput(object):
                     is_per = c == "%"
                     is_alpha = c.isalpha()
                     is_num = c.isnumeric()
+                    is_fac = c == "!"
+                    is_sqrt = c == "√"
 
                     n = ""
                     if i + 1 < len(input):
@@ -154,8 +158,12 @@ class MagicInput(object):
                             raise PercentSignError
 
                     # factorial
+                    elif is_fac:
+                        pass
 
                     # square root
+                    elif is_sqrt:
+                        pass
 
                     # operators
                     elif is_op:
