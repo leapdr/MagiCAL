@@ -33,6 +33,7 @@ FUNC_EVAL = {
     "sinh": lambda x: sinh(ANGLE_DEFAULT(x)),
     "tan": lambda x: tan(ANGLE_DEFAULT(x)),
     "tanh": lambda x: tanh(ANGLE_DEFAULT(x)),
+    "sqrt": lambda x: sqrt(x),
 }
 
 class MagicMath(object):
