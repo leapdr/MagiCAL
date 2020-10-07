@@ -9,6 +9,9 @@ TOSYMBOL = {
     "/": "÷"
 }
 
+LEFT  = ["√"]
+RIGHT = ["!", "%"]
+
 CONST = ["π", "ℯ"]
 SIGNS = ["+", "-"]
 OPS = ["*", "/", "+", "-", "m"]
@@ -23,7 +26,8 @@ class MagicInput(object):
         if type(input) != str:
             input = str(input)
 
-        self.input = input.replace("÷", "/").replace("×", "*").replace("mod", "m")
+        # replacement
+        self.input = input.replace("÷", "/").replace("×", "*").replace("mod", "m").replace("√", "sqrt ")
 
     def isInteger(self):
         return self.input.isnumeric()
@@ -154,15 +158,11 @@ class MagicInput(object):
                     # percent
                     elif is_per:
                         alp = p.isalpha()
-                        if alp or p == "." or p in OPS:
+                        if alp or p == "." or p in OPS or p == "":
                             raise PercentSignError
 
                     # factorial
                     elif is_fac:
-                        pass
-
-                    # square root
-                    elif is_sqrt:
                         pass
 
                     # operators
