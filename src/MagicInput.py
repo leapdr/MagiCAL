@@ -108,7 +108,7 @@ class MagicInput(object):
 
                     # number
                     if is_num:
-                        if p.isalpha() and fn not in FUNCS and fn not in OPS:
+                        if p.isalpha() and fn != "" and fn not in FUNCS and fn not in OPS:
                             raise UnrecognizedCharacter
                         elif p == "%":
                             raise PercentSignError
