@@ -42,16 +42,20 @@ def eval():
 
 # get button background image
 button_bg = PhotoImage(file = r"res/btn_bg.png")
+button_bg_2 = PhotoImage(file = r"res/btn_bg_2.png")
 
-buttons = [i for i in range(10)] + [".", "%"] + [
-    "÷", " mod ", "sin ", "cos ", "tan ",
-    "×", "|x|", "sinh", "cosh ", "tanh ",
-    "-", "C", "a×b", "π", "ℯ",
-    "+", "=", "(", ")", "xⁿ"
+buttons = [i for i in range(10)] + [".", "%", "C", "="] + [
+    "÷", " mod ", "sin ", "cos ", "tan ", "log",
+    "×", "|x|", "sinh", "cosh ", "tanh ", "ln",
+    "-", "xⁿ", "a×b", "π", "ℯ", "√",
+    "+", "x!", "Re", "Im", "", "",
+    "⮌", "i", "(", ")"
 ]
 
 row_fix = 2
 for x, i in enumerate(buttons):
+    btn_bg = button_bg
+
     # for numbers
     if str(i).isnumeric():
         # lambda i=i to create different functions
@@ -62,7 +66,7 @@ for x, i in enumerate(buttons):
             compound=CENTER,
             padx=0, pady=0,
             text=i,
-            image=button_bg,
+            image=btn_bg,
             command=lambda i=i: encode(i))
 
         if i == 0:
@@ -84,15 +88,28 @@ for x, i in enumerate(buttons):
         if i == "":
             pass
         else:
+            cspan = 1
+
             if i == ".":
                 row = 4
                 col = 1
             elif i == "%":
                 row = 4
                 col = 2
+            elif i == "C":
+                row = 5
+                col = 0
+            elif i == "=":
+                row = 5
+                col = 1
+                cspan = 2
+                btn_bg = button_bg_2
             else:
-                row = int((x-12)/5+1)
-                col = (x-12)%5+3
+                row = int((x-14)/6+1)
+                col = (x-14)%6+3
+            
+            pady = (5, 5 if row == 5 else 0)
+            padx = (5, 5 if col == 8 else 0)
 
             fn = ""
             encode_text = i
@@ -112,11 +129,11 @@ for x, i in enumerate(buttons):
                 compound=CENTER,
                 padx=0, pady=0,
                 text=i,
-                image=button_bg,
+                image=btn_bg,
                 command=fn if fn else lambda x=x: encode(encode_text)
             )
 
-            buttons[x].grid(row=row, column=col, padx=(5,0), pady=(5,0))
+            buttons[x].grid(row=row, column=col, padx=padx, pady=pady, columnspan=cspan)
 
 root.mainloop()
 sys.exit()
