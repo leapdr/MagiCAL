@@ -44,7 +44,7 @@ def eval():
 button_bg = PhotoImage(file = r"res/btn_bg.png")
 
 buttons = [i for i in range(10)] + [".", "%"] + [
-    "÷", " mod ", "sin ", "cos ", "tan ", 
+    "÷", " mod ", "sin ", "cos ", "tan ",
     "×", "|x|", "sinh", "cosh ", "tanh ",
     "-", "C", "a×b", "π", "ℯ",
     "+", "=", "(", ")", "xⁿ"
@@ -65,13 +65,18 @@ for x, i in enumerate(buttons):
             image=button_bg,
             command=lambda i=i: encode(i))
 
-        if(i == 0):
+        if i == 0:
             row = 4
             col = 0
         else:
             # fix rows for (7 8 9)-first arrangement
             row = int((i-1)/3+1) 
             col = (i-1)%3
+
+        if row == 1:
+            row = 3
+        elif row == 3:
+            row = 1
 
         buttons[i].grid(row=row, column=col, padx=(5,0), pady=(5,0))
     # for symbols
