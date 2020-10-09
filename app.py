@@ -6,6 +6,10 @@ from tkinter import ttk as ttk
 sys.path.insert(1, "./src")
 
 from MagicMath import MagicMath
+from MagicHistory import MagicHistory
+
+history = MagicHistory()
+sys.exit()
 
 root = Tk()
 root.title("MagiCAL")
