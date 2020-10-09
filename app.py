@@ -24,13 +24,16 @@ input.grid(row=0, column=0, columnspan=8, padx=(5,0), pady=(5,0))
 
 math = MagicMath("app", input, END)
 history = MagicHistory()
+history.addToCurrent("")
 
 # encode function
 def encode(val):
-    print(val)
     current = input.get()
     clear()
     input.insert(0, f"{current}{val}")
+
+    newCurrent = input.get()
+    history.addToCurrent(newCurrent)
 
 def factorizeInput():
     math.factorize()
@@ -38,6 +41,16 @@ def factorizeInput():
 # clear function
 def clear():
     input.delete(0, END)
+
+# undo function
+def undo():
+    if(history.currentSize > 1):
+        history.getFromCurrent()
+        data = history.getFromCurrent()
+        history.addToCurrent(data)
+
+        clear()
+        input.insert(0, f"{data}")
 
 # eval function
 def eval():
@@ -120,10 +133,14 @@ for x, i in enumerate(buttons):
                 fn = eval
             elif i == "C":
                 fn = clear
+            elif i == "⮌":
+                fn = undo
             elif i == "a×b":
                 fn = factorizeInput
             elif i == "xⁿ":
                 i = "^"
+            elif i == "x!":
+                i = "!"
 
             btn = Button(root,
                 bd=0, bg="#ECECEC",

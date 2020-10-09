@@ -170,7 +170,7 @@ class MagicInput(object):
                         alp = p.isalpha()
                         if p == ".":
                             raise DecimalError
-                        elif alp and p not in OPS:
+                        elif alp and p not in OPS and is_sign_used:
                             raise OperatorError(2)
                         elif p in OPS:
                             if c not in SIGNS or (p in SIGNS and is_sign_used):
