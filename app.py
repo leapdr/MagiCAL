@@ -8,9 +8,6 @@ sys.path.insert(1, "./src")
 from MagicMath import MagicMath
 from MagicHistory import MagicHistory
 
-history = MagicHistory()
-sys.exit()
-
 root = Tk()
 root.title("MagiCAL")
 root["bg"] = "#ECECEC"
@@ -26,9 +23,11 @@ input = ttk.Entry(root, style='pad.TEntry', width=62)
 input.grid(row=0, column=0, columnspan=8, padx=(5,0), pady=(5,0))
 
 math = MagicMath("app", input, END)
+history = MagicHistory()
 
 # encode function
 def encode(val):
+    print(val)
     current = input.get()
     clear()
     input.insert(0, f"{current}{val}")
@@ -50,10 +49,10 @@ button_bg_2 = PhotoImage(file = r"res/btn_bg_2.png")
 
 buttons = [i for i in range(10)] + [".", "%", "C", "="] + [
     "÷", " mod ", "sin ", "cos ", "tan ", "log",
-    "×", "|x|", "sinh", "cosh ", "tanh ", "ln",
-    "-", "xⁿ", "a×b", "π", "ℯ", "√",
-    "+", "x!", "Re", "Im", "", "",
-    "⮌", "i", "(", ")"
+    "×", "xⁿ", "sinh", "cosh ", "tanh ", "ln",
+    "-", "|x|", "a×b", "π", "ℯ", "√",
+    "+", "x!", "Re", "Im", "B", "B",
+    "⮌", "i", "(", ")", "D", "D"
 ]
 
 row_fix = 2
@@ -63,7 +62,7 @@ for x, i in enumerate(buttons):
     # for numbers
     if str(i).isnumeric():
         # lambda i=i to create different functions
-        buttons[i] = Button(root,
+        btn = Button(root,
             bd=0, bg="#ECECEC",
             borderwidth=0,
             highlightthickness=0,
@@ -86,7 +85,7 @@ for x, i in enumerate(buttons):
         elif row == 3:
             row = 1
 
-        buttons[i].grid(row=row, column=col, padx=(5,0), pady=(5,0))
+        btn.grid(row=row, column=col, padx=(5,0), pady=(5,0))
     # for symbols
     else:
         if i == "":
@@ -116,7 +115,7 @@ for x, i in enumerate(buttons):
             padx = (5, 5 if col == 8 else 0)
 
             fn = ""
-            encode_text = i
+            btn_txt = i
             if i == "=":
                 fn = eval
             elif i == "C":
@@ -124,20 +123,20 @@ for x, i in enumerate(buttons):
             elif i == "a×b":
                 fn = factorizeInput
             elif i == "xⁿ":
-                encode_text = "^"
+                i = "^"
 
-            buttons[x] = Button(root,
+            btn = Button(root,
                 bd=0, bg="#ECECEC",
                 borderwidth=0,
                 highlightthickness=0,
                 compound=CENTER,
                 padx=0, pady=0,
-                text=i,
+                text=btn_txt,
                 image=btn_bg,
-                command=fn if fn else lambda x=x: encode(encode_text)
+                command=fn if fn else lambda i=i: encode(i)
             )
 
-            buttons[x].grid(row=row, column=col, padx=padx, pady=pady, columnspan=cspan)
+            btn.grid(row=row, column=col, padx=padx, pady=pady, columnspan=cspan)
 
 root.mainloop()
 sys.exit()
