@@ -1,4 +1,14 @@
 
+def _historyCounter(func):
+    def fn(self, *args, **kwargs):
+        data = func(self, *args, **kwargs)
+
+        self.currentSize = len(self.current)
+        self.solutionsSize = len(self.solutions)
+
+        return data
+    return fn
+
 class MagicHistory(object):
     currentHistoryLimit = 50
     solutionHistoryLimit = 50
@@ -11,16 +21,6 @@ class MagicHistory(object):
 
     def __init__(self):
         pass
-
-    def _historyCounter(func):
-        def fn(self, *args, **kwargs):
-            data = func(self, *args, **kwargs)
-
-            self.currentSize = len(self.current)
-            self.solutionsSize = len(self.solutions)
-
-            return data
-        return fn
 
     # get From current
     @_historyCounter
