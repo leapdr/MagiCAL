@@ -65,7 +65,7 @@ buttons = [i for i in range(10)] + [".", "%", "C", "="] + [
     "×", "xⁿ", "sinh", "cosh ", "tanh ", "ln",
     "-", "|x|", "a×b", "π", "ℯ", "√",
     "+", "x!", "Re", "Im", "B", "B",
-    "⮌", "i", "(", ")", "D", "D"
+    "⎌", "i", "(", ")", "D", "D"
 ]
 
 row_fix = 2
@@ -133,7 +133,7 @@ for x, i in enumerate(buttons):
                 fn = eval
             elif i == "C":
                 fn = clear
-            elif i == "⮌":
+            elif i == "⎌":
                 fn = undo
             elif i == "a×b":
                 fn = factorizeInput

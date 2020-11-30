@@ -58,7 +58,7 @@ class MagicMath(object):
             if not(m_input.isInteger()):
                 raise InputError(0)
             elif m_input == "": 
-                self.display(0, " to factorize")
+                self.display(0)
             else:
                 x = m_input.input
                 # convert list item to string
