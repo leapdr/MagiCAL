@@ -2,7 +2,7 @@
 import re
 import sys
 
-from MagicError import *
+from src.MagicError import *
 
 TOSYMBOL = {
     "*": "×",

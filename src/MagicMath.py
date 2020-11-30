@@ -3,8 +3,8 @@ import re
 
 from math import *
 
-from MagicError import *
-from MagicInput import *
+from src.MagicError import *
+from src.MagicInput import *
 
 PI = pi
 E = e

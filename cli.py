@@ -1,8 +1,8 @@
+#!/usr/bin/env python3
+
 import sys
 
-sys.path.insert(1, "./src")
-
-from MagicMath import *
+from src.MagicMath import *
 
 # Execute arguments
 if len(sys.argv) > 1:

@@ -1,14 +1,14 @@
+#!/usr/bin/env python3
+
 import sys
 
-from tkinter import *
+import tkinter as tk
 from tkinter import ttk as ttk
 
-sys.path.insert(1, "./src")
+from src.MagicMath import MagicMath
+from src.MagicHistory import MagicHistory
 
-from MagicMath import MagicMath
-from MagicHistory import MagicHistory
-
-root = Tk()
+root = tk.Tk()
 root.title("MagiCAL")
 root["bg"] = "#ECECEC"
 
@@ -22,7 +22,7 @@ ttk.Style().configure('pad.TEntry', padding='7 7 7 7')
 input = ttk.Entry(root, style='pad.TEntry', width=62)
 input.grid(row=0, column=0, columnspan=8, padx=(5,0), pady=(5,0))
 
-math = MagicMath("app", input, END)
+math = MagicMath("app", input, tk.END)
 history = MagicHistory()
 history.addToCurrent("")
 
@@ -40,7 +40,7 @@ def factorizeInput():
 
 # clear function
 def clear():
-    input.delete(0, END)
+    input.delete(0, tk.END)
 
 # undo function
 def undo():
@@ -57,8 +57,8 @@ def eval():
     math.parse()
 
 # get button background image
-button_bg = PhotoImage(file = r"res/btn_bg.png")
-button_bg_2 = PhotoImage(file = r"res/btn_bg_2.png")
+button_bg = tk.PhotoImage(file = r"res/btn_bg.png")
+button_bg_2 = tk.PhotoImage(file = r"res/btn_bg_2.png")
 
 buttons = [i for i in range(10)] + [".", "%", "C", "="] + [
     "÷", " mod ", "sin ", "cos ", "tan ", "log",
@@ -75,11 +75,11 @@ for x, i in enumerate(buttons):
     # for numbers
     if str(i).isnumeric():
         # lambda i=i to create different functions
-        btn = Button(root,
+        btn = tk.Button(root,
             bd=0, bg="#ECECEC",
             borderwidth=0,
             highlightthickness=0,
-            compound=CENTER,
+            compound=tk.CENTER,
             padx=0, pady=0,
             text=i,
             image=btn_bg,
@@ -142,11 +142,11 @@ for x, i in enumerate(buttons):
             elif i == "x!":
                 i = "!"
 
-            btn = Button(root,
+            btn = tk.Button(root,
                 bd=0, bg="#ECECEC",
                 borderwidth=0,
                 highlightthickness=0,
-                compound=CENTER,
+                compound=tk.CENTER,
                 padx=0, pady=0,
                 text=btn_txt,
                 image=btn_bg,
