@@ -18,6 +18,7 @@ Welcome to MagiCAL CLI
 by Aaron Basco
 """
 
+# initialize command list for CLI
 command_list = """
 -------------------------
 Command List:
@@ -28,6 +29,7 @@ Command List:
 -------------------------
 """
 
+# initialize function list for CLI
 function_list = """
 Function List:
 (0)  - [abs(x)] Absolute Value
@@ -64,6 +66,8 @@ Function List:
 (31) - [tan^-1(x)] Inverse Tangent
 (32) - [twos(x)] Two's Complement
 """
+
+# enable available functions
 avail_func = {
   "9": ("cos", "c"),
   "10": ("cosh", "C"),
@@ -73,24 +77,29 @@ avail_func = {
   "29": ("tanh", "T"),
 }
 
+# display intro message
 print(intro_message)
 
 com = ""
 while com != "-":
+  # display list of available commands
   print(command_list)
   com = input("Select command from list to start: ")
 
   if com == "0":
+    # for evaluation of expressions
     expr = input("Enter expression to be evaluated: ")
     
     math = MagicMath("cli", expr)
     math.parse()
   elif com == "1":
+    # for factoring input
     expr = input("Enter an integer to be factorize: ")
 
     math = MagicMath("cli", expr)
     math.factorize()
   elif com == "2":
+    # for calling a function
     print(function_list)
     f = input("Select function: ")
 
@@ -101,9 +110,10 @@ while com != "-":
       math = MagicMath("cli", expr)
       result = FUNC_EVAL[function](float(expr))
       math.display(result)
-
     else:
+      # unknown or unavailable function
       print("Sorry! The current function is unavailable, please wait for the next update")
     
   elif com == "-":
+    # exit message
     print("Bye!")

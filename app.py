@@ -8,6 +8,7 @@ from tkinter import ttk as ttk
 from src.MagicMath import MagicMath
 from src.MagicHistory import MagicHistory
 
+# initialize tk for UI
 root = tk.Tk()
 root.title("MagiCAL")
 root["bg"] = "#ECECEC"
@@ -22,12 +23,13 @@ ttk.Style().configure('pad.TEntry', padding='7 7 7 7')
 input = ttk.Entry(root, style='pad.TEntry', width=62)
 input.grid(row=0, column=0, columnspan=8, padx=(5,0), pady=(5,0))
 
+# create the claculator with the tk input
 math = MagicMath("app", input, tk.END)
 history = MagicHistory()
 history.addToCurrent("")
 
-# encode function
 def encode(val):
+  """Encode the given character to the input field"""
   current = input.get()
   clear()
   input.insert(0, f"{current}{val}")
@@ -36,14 +38,15 @@ def encode(val):
   history.addToCurrent(newCurrent)
 
 def factorizeInput():
+  """Factorize the input and displays the multiplication"""
   math.factorize()
 
-# clear function
 def clear():
+  """Clears the input field"""
   input.delete(0, tk.END)
 
-# undo function
 def undo():
+  """Undo last action"""
   if(history.currentSize > 1):
     history.getFromCurrent()
     data = history.getFromCurrent()
@@ -52,14 +55,15 @@ def undo():
     clear()
     input.insert(0, f"{data}")
 
-# eval function
 def eval():
+  """Evaluates the given mathematical expression"""
   math.parse()
 
 # get button background image
 button_bg = tk.PhotoImage(file = r"res/btn_bg.png")
 button_bg_2 = tk.PhotoImage(file = r"res/btn_bg_2.png")
 
+# initialize buttons for the calculator
 buttons = [i for i in range(10)] + [".", "%", "C", "="] + [
   "÷", " mod ", "sin ", "cos ", "tan ", "log",
   "×", "xⁿ", "sinh", "cosh ", "tanh ", "ln",
@@ -68,6 +72,7 @@ buttons = [i for i in range(10)] + [".", "%", "C", "="] + [
   "⎌", "i", "(", ")", "D", "D"
 ]
 
+# display the defined buttons
 row_fix = 2
 for x, i in enumerate(buttons):
   btn_bg = button_bg
@@ -101,11 +106,13 @@ for x, i in enumerate(buttons):
     btn.grid(row=row, column=col, padx=(5,0), pady=(5,0))
   # for symbols
   else:
+    # check span
     if i == "":
       pass
     else:
       cspan = 1
 
+      # special button characters
       if i == ".":
         row = 4
         col = 1
@@ -124,9 +131,11 @@ for x, i in enumerate(buttons):
         row = int((x-14)/6+1)
         col = (x-14)%6+3
       
+      # default padding
       pady = (5, 5 if row == 5 else 0)
       padx = (5, 5 if col == 8 else 0)
 
+      # special buttons that do input operations
       fn = ""
       btn_txt = i
       if i == "=":
@@ -142,6 +151,7 @@ for x, i in enumerate(buttons):
       elif i == "x!":
         i = "!"
 
+      # finally display the button using tk.Button
       btn = tk.Button(root,
         bd=0, bg="#ECECEC",
         borderwidth=0,
