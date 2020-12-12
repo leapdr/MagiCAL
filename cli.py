@@ -6,11 +6,11 @@ from src.MagicMath import *
 
 # Execute arguments
 if len(sys.argv) > 1:
-    expr = sys.argv[1]
-    
-    math = MagicMath("cli", expr)
-    math.parse()
-    sys.exit()
+  expr = sys.argv[1]
+  
+  math = MagicMath("cli", expr)
+  math.parse()
+  sys.exit()
 
 # Enter CLI
 intro_message = """
@@ -65,45 +65,45 @@ Function List:
 (32) - [twos(x)] Two's Complement
 """
 avail_func = {
-    "9": ("cos", "c"),
-    "10": ("cosh", "C"),
-    "23": ("sin", "s"),
-    "24": ("sinh", "S"),
-    "28": ("tan", "t"),
-    "29": ("tanh", "T"),
+  "9": ("cos", "c"),
+  "10": ("cosh", "C"),
+  "23": ("sin", "s"),
+  "24": ("sinh", "S"),
+  "28": ("tan", "t"),
+  "29": ("tanh", "T"),
 }
 
 print(intro_message)
 
 com = ""
 while com != "-":
-    print(command_list)
-    com = input("Select command from list to start: ")
+  print(command_list)
+  com = input("Select command from list to start: ")
 
-    if com == "0":
-        expr = input("Enter expression to be evaluated: ")
-        
-        math = MagicMath("cli", expr)
-        math.parse()
-    elif com == "1":
-        expr = input("Enter an integer to be factorize: ")
+  if com == "0":
+    expr = input("Enter expression to be evaluated: ")
+    
+    math = MagicMath("cli", expr)
+    math.parse()
+  elif com == "1":
+    expr = input("Enter an integer to be factorize: ")
 
-        math = MagicMath("cli", expr)
-        math.factorize()
-    elif com == "2":
-        print(function_list)
-        f = input("Select function: ")
+    math = MagicMath("cli", expr)
+    math.factorize()
+  elif com == "2":
+    print(function_list)
+    f = input("Select function: ")
 
-        if f in avail_func.keys():
-            function = avail_func[f][1]
-            expr = input("Enter x: ")
+    if f in avail_func.keys():
+      function = avail_func[f][1]
+      expr = input("Enter x: ")
 
-            math = MagicMath("cli", expr)
-            result = FUNC_EVAL[function](float(expr))
-            math.display(result)
+      math = MagicMath("cli", expr)
+      result = FUNC_EVAL[function](float(expr))
+      math.display(result)
 
-        else:
-            print("Sorry! The current function is unavailable, please wait for the next update")
-        
-    elif com == "-":
-        print("Bye!")
+    else:
+      print("Sorry! The current function is unavailable, please wait for the next update")
+    
+  elif com == "-":
+    print("Bye!")
